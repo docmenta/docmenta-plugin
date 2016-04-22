@@ -1,0 +1,859 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Auto-Format overview</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <style type="text/css">
+      table { border-color:#000000; border-collapse:collapse; }
+      .outer { color:#cc0033; }
+      .code_example { padding:3px 10px 3px 3px; margin:12px 0 12px 0; background-color:#f0f0f0;
+                      border:1px dashed #202020; }
+      .trans_box { padding:3px 10px 3px 3px; margin:12px 0 12px 0; background-color:#f0f0f0;
+                      border:2px solid #202020; }
+      .arrow_label { font-family: Arial, sans-serif; font-size: 12px; }
+      table .code_example { margin:0; }
+      .keyword_style { color: #4239cf; font-weight: bold }
+      .comment_style { font-family: Courier New, Courier, mono; color: #888888; font-weight: bold }
+      .char_style { color: #41963f }
+      .literal_style { color: #9200b7 }
+      .attrib_style { color: #409b3a; FONT-WEIGHT: normal }
+      .cdata_style { color: #806050 }
+      .tag_style { color: #4239cf }
+      .listing { max-width:900px; }
+      .listing_java { background-color: #f0f0f0; padding: 3pt; font-family: Courier New, Courier, mono; font-size: 10pt; border: 1px solid #808080; }
+      .listing_xml { background-color: #f0f0f0; padding: 3pt; font-family: Courier New, Courier, mono; font-size: 10pt; border: 1px solid #808080; }
+      .listnum_style { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; padding-top: 3pt; padding-right: 0pt; }
+      .__line__ { white-space: pre; padding-left:2pt; }
+      .__marknum__ { white-space: pre; color:#F0F0F0; background-color: #000088; padding-left:2pt; }
+      .__markline__ { white-space: pre; padding-left:2pt; background-color:#FAFAFA; }
+      .listing_caption { font-weight: bold; font-style:italic; padding-left:22pt; }
+    </style>
+
+</head>
+<body>
+
+<h1>Auto-Format API - Overview and Example</h1>
+
+<a href="#af_overview" >Overview</a><br>
+<a href="#af_example" >Example: Dynamic template mechanism</a>
+
+<a name="af_overview" ></a>
+<h2>Overview</h2>
+<p>
+Docmenta allows users to create inline- and block-styles that
+authors can assign to content. On the source level,
+these user-defined styles represent CSS classes which are assigned to XHTML
+elements like <tt>div</tt>, <tt>span</tt> and others. For example, when
+an author selects words in the content-editor and assigns an inline-style with
+ID <tt>my_style</tt> to the selection, then following XHTML code is
+generated:
+</p>
+<pre class="code_example" style="width:600px;">
+    <b>&lt;span class="my_style"&gt;</b>
+       <i>... selected words ...</i>
+    <b>&lt;/span&gt;</b>
+</pre>
+<p>
+Accordingly, when an author selects one or more paragraphs or other
+block-elements and assigns a block-style with ID <tt>my_style</tt> to the selection,
+then e.g. following XHTML code is generated:
+</p>
+<pre class="code_example" style="width:600px;">
+    <b>&lt;div class="my_style"&gt;</b>
+        <b>&lt;p&gt;</b>
+           <i>... first selected block ...</i>
+        <b>&lt;/p&gt;</b>
+        <b>&lt;div class="other_style"&gt;</b>
+           <i>... second selected block ...</i>
+        <b>&lt;/div&gt;</b>
+        ...
+    <b>&lt;/div&gt;</b>
+</pre>
+
+<p>
+As you can see in the example above, elements can be nested: the block with style
+<tt>other_style</tt> is contained within the block with style
+<tt>my_style</tt>.
+</p>
+<p>
+When you are working with pure XHTML and CSS, then a style is
+a set of CSS properties which define the font-size,
+font-color, background-color and so on.
+However, you cannot change the overall structure of a block just by
+changing the CSS properties of a style.
+For example, you cannot transform a simple paragraph into a table, just
+by using CSS properties.
+To allow such transformations, in Docmenta you can additionally 
+assign one or more <i>Auto-Format classes</i> to a style.
+Basically an Auto-Format class is a piece of Java code that gets the
+element to which the style is assigned as input, and returns
+some replacement content.
+Following are two examples of such transformations:
+
+<p>
+<b>Example 1:</b><br />
+In the first example an Auto-Format transformation converts the input-element 
+(highlighted in red) into a table with two rows.  The first row is filled with 
+the value of the input-element's title attribute and the second row is filled 
+with the inner content of the input-element.
+Furthermore any nested <tt>p</tt> element is replaced by a
+<tt>&lt;br/&gt;</tt> element after the block (note that XHTML has to be
+generated, i.e. <tt>&lt;br/&gt;</tt> has to be generated instead of 
+<tt>&lt;br&gt;</tt>).
+The following illustration gives an example of the described transformation,
+assuming that the transformation is assigned to a style with ID 
+<tt>my_style1</tt>:
+</p>
+<table border="0">
+<tr>
+<td>
+<pre class="code_example" style="width:300px;">
+    <span class="outer"><b>&lt;div class="my_style1"
+         title="Some animals"&gt;</b>
+      <b>&lt;p&gt;</b>
+        Dog, cat, bird.
+      <b>&lt;/p&gt;</b>
+      <b>&lt;p&gt;</b>
+        Sheep, pig, cow.
+      <b>&lt;/p&gt;</b>
+    <b>&lt;/div&gt;</b></span>
+</pre>
+</td>
+<td align="center" valign="middle">
+    <b class="arrow_label">Auto-Format<br>
+    Transformation</b><br>
+    <img src="transform_arrow_right.gif" /><br>
+    &nbsp;<br>&nbsp;
+</td>
+<td>
+<pre class="code_example" style="width:300px;">
+    <b>&lt;table&gt;
+      &lt;tr&gt;
+        &lt;td&gt;</b><span class="outer">Some animals</span><b>&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt;</b>
+          <span class="outer">Dog, cat, bird.</span><b>&lt;br /&gt;</b>
+          <span class="outer">Sheep, pig, cow.</span><b>&lt;br /&gt;</b>
+        <b>&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/table&gt;</b>
+</pre>
+</td>
+</tr>
+</table>
+
+<p>
+<b>Example 2:</b><br>
+In the second example, an Auto-Format transformation just adds an inline image
+with alias name <tt>mypic</tt> to the beginning of the content.
+Following illustration gives an example, assuming that the transformation
+is assigned to a style with ID <tt>mystyle_2</tt>:
+</p>
+<table border="0">
+<tr>
+<td valign="bottom">
+<pre class="code_example" style="width:300px;">
+    <span class="outer"><b>&lt;div class="my_style2"&gt;</b>
+      Dog, cat, bird.
+    <b>&lt;/div&gt;</b></span>
+</pre>
+</td>
+<td align="center" valign="middle">
+    <b class="arrow_label">Auto-Format<br>
+    Transformation</b><br>
+    <img src="transform_arrow_right.gif" />
+</td>
+<td valign="bottom">
+<pre class="code_example" style="width:400px;">
+    <b class="outer">&lt;div class="my_style2"&gt;</b>
+      &lt;img src="image/mypic" /&gt;<span class="outer">Dog, cat, bird.</span>
+    <b class="outer">&lt;/div&gt;</b>
+</pre>
+</td>
+</tr>
+</table>
+
+<p>
+Note that in the second example, the outer <tt>div</tt>-block of the input is preserved in the result.
+</p>
+<h3>Why using Auto-Format transformations?</h3>
+<p>
+Two questions could arise: why should somebody need such transformations, 
+and if it is needed, why not use a XSLT processor instead?
+To answer the first question, consider the situation, that
+you want to mark special paragraphs as warnings, e.g. in the rendered output
+these paragraphs shall be highlighted with
+an exclamation icon. However, you might need differnt designs for 
+different output formats, and if the design of warnings has to be changed in the
+future, you want to avoid having to update the content at each position 
+within your publication where a warning was inserted. 
+Furthermore you want to assure that the same design of warnings is used 
+throughout the publication. In Docmenta these problems can be
+partially solved by using style-variants, i.e. defining
+different CSS properties for the same style ID. Though, using style-variants is 
+sufficient in many cases, you cannot change the overall layout of a block, just by 
+changing the CSS properties of a style. For example, you cannot turn a simple box 
+to become a table with two rows. However, such transformations can be done using 
+Auto-Format classes.
+As an example of how to solve these issues with an Auto-Format class,
+see the <a href="#af_example">example code</a> below,
+which implements a dynamic template mechanism.
+</p>
+<p>
+To answer the second question: 
+Actually, you can implement an Auto-Format transformation by using a XSLT processor, though
+for many simple transformations string operations might be sufficient.
+In general, you can use any library or tool, whatever you consider best (e.g. DOM),
+to implement an Auto-Format transformation.
+The only restriction is, that is has to be possible to call the tool/library
+from within Java code.
+</p>
+
+<h3>The export process</h3>
+<p>
+Note that Auto-Format transformations are executed dynamically (on the fly) during
+publication export and during content preview. This means, the stored source
+content which was created by the authors is not persistently modified by these
+transformations.
+For example, if an Auto-Format transformation inserts an inline image into
+the content (see example 2 above), the image
+will only appear in the exported publication or when a preview of the content
+is rendered. But when the author edits the content, he will not see the
+inline image. 
+<!--
+As noted above, the advantage of this is, that the Auto-Format transformation
+which is assigned to a style can be changed once, and the
+modification will appear throughout the publications where this style is used
+without having to touch the XHTML sources.
+-->
+</p>
+<p>
+So far we've just had a look to what a single transformation does.
+Now we'll take a look at the complete export process and see how the
+transformations interact in specific situations.
+
+The left side of the following illustration shows the XHTML source fragment
+of a publication (only the elements are shown which are important for this
+example).
+</p>
+<p><img src="auto_format_export_32bit.png" /></p>
+<p>
+The source content contains four elements, <tt>elem1</tt>, <tt>elem2</tt>,
+<tt>elem3</tt> and <tt>elem4</tt>, from which <tt>elem2</tt> and
+<tt>elem3</tt> are contained within <tt>elem1</tt>.
+The first element has the style <tt>mystyle_1</tt> assigned.
+The other elements have the style <tt>mystyle_2</tt> assigned.
+For this example, we assume that <tt>mystyle_1</tt> and <tt>mystyle_2</tt> have
+an Auto-Format transformation assigned as described in example 1 and
+2 above.
+</p>
+
+<p>
+During export and preview the source content is parsed top-down.
+As soon as an element is found which has an Auto-Format style assigned,
+this element is transformed.
+Therefore, in our example the first element to be transformed is <tt>elem1</tt>.
+The result of this transformation is a table with the element's title
+in the first row and the element's inner content in the second row. Furthermore
+the <tt>p</tt> element is replaced by a <tt>&lt;br /&gt;</tt>. Following
+illustration depicts the first transformation:
+</p>
+<p><img src="auto_format_export_t1_32bit.png" /></p>
+<p>
+Now, the result of the first transformation is parsed again, to see if there
+are further Auto-Format styles to be processed.
+Actually, there is still the element <tt>elem2</tt> in the result,
+which has the style <tt>my_style2</tt> assigned.
+Therefore the second transformation is to transform <tt>elem2</tt>, as
+shown in the following illustration:
+</p>
+<p><img src="auto_format_export_t2_32bit.png" /></p>
+<p>
+After this transformation, there are no more Auto-Format styles to be processed,
+and the parsing continues in the source content
+after the element <tt>elem1</tt>, i.e. the third transformation is the
+processing of element <tt>elem4</tt>. Note that element <tt>elem3</tt> is
+not transformed, because the <tt>p</tt> element was removed by the first
+transformation.
+</p>
+<p>
+You might wonder why the transformation of <tt>elem2</tt> does not lead to an
+infinite loop, because the result of this transformation still contains
+the element <tt>&lt;span id="elem2" class="my_style2"&gt;</tt>, which originally
+caused the transformation. The reason is, that by default, the style which caused 
+a transformation is <i>not</i> processed any more during the parsing of the 
+transformation result.
+However, the Auto-Format API allows a programmer to disable this behavior by
+calling the method <tt>setStyleRecursion(true)</tt> 
+(note however, that the recursion level is limited by the execution engine to avoid
+infinte loops).
+</p>
+
+<h3>Piping of transformations</h3>
+<p>
+In Docmenta it is possible to assign more than one Auto-Format transformation
+to a single style.
+If this is the case, then the output of the first transformation is
+used as input for the second transformation. If a third Auto-Format transformation
+is assigned to the style, then the output of the second transformation is
+used as input for the third transformation, and so on. The following
+illustration depicts this pipeline process:
+</p>
+
+<table border="0" cellspacing="3">
+<tr>
+<td valign="middle" align="center">
+<div class="trans_box" style="width:120px;">
+    &nbsp;<br>
+    Element<br>
+    &nbsp;
+</div>
+</td>
+<td align="center" valign="middle">
+    <b class="arrow_label">Auto-Format 1</b><br>
+    <img src="transform_arrow_right.gif" />
+</td>
+<td valign="middle" align="center">
+<div class="trans_box" style="width:120px;">
+    &nbsp;<br>
+    Result 1<br>
+    &nbsp;
+</div>
+</td>
+<td align="center" valign="middle">
+    <b class="arrow_label">Auto-Format 2</b><br>
+    <img src="transform_arrow_right.gif" />
+</td>
+<td valign="middle" align="center">
+<div class="trans_box" style="width:120px;">
+    &nbsp;<br>
+    Result 2<br>
+    &nbsp;
+</div>
+</td>
+<td align="center" valign="middle">
+    <b class="arrow_label">Auto-Format 3</b><br>
+    <img src="transform_arrow_right.gif" />
+</td>
+<td>
+    &nbsp;&nbsp;<b>. . .</b>
+</td>
+</tr>
+</table>
+
+<p>
+As an example, consider the situation that you want to include program
+listings in your publications. The listings shall have line-numbers and
+the key-words of the programming language shall
+be highlighted. 
+To solve this requirements without having to format the listings
+manually, you could create one Auto-Format transformation which adds
+line-numbers to the content, and a second Auto-Format
+transformation which highlights the keywords. 
+Both transformations could be implemented completely independent of each other.
+To achieve the required formatting
+you could create a style, e.g. with ID <tt>listing</tt>, which has both
+transformations assigned.
+Following illustration depicts the transformation steps of an element which has the 
+style <tt>listing</tt> assigned:
+</p>
+
+<table border="0" cellspacing="3">
+<tr>
+<td valign="bottom">
+<pre class="code_example" style="width:300px;">
+    <span class="outer"><b>&lt;div class="listing"&gt;</b>
+      if (a > 0) a = b;
+      else a = c;
+    <b>&lt;/div&gt;</b></span>
+</pre>
+</td>
+<td align="center" valign="middle">
+    <b class="arrow_label">Highlight Keywords</b><br>
+    <img src="transform_arrow_right.gif" />
+</td>
+<td valign="bottom">
+<pre class="code_example" style="width:400px;">
+    <b class="outer">&lt;div class="listing"&gt;</b>
+      <b>&lt;span class="key"&gt;</b><span class="outer">if</span><b>&lt;/span&gt;</b><span class="outer"> (a > 0) a = b;</span>
+      <b>&lt;span class="key"&gt;</b><span class="outer">else</span><b>&lt;/span&gt;</b><span class="outer"> a = c;</span>
+    <b class="outer">&lt;/div&gt;</b>
+</pre>
+</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td align="center" valign="middle">
+    <table border="0">
+        <tr>
+            <td><img src="transform_arrow_down.gif" /></td>
+            <td><b class="arrow_label">Add Line Numbers</b></td>
+        </tr>
+    </table>
+</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td valign="bottom">
+<pre class="code_example" style="width:400px;">
+    <b class="outer">&lt;div class="listing"&gt;</b>
+      1 <b>&lt;span class="key"&gt;</b><span class="outer">if</span><b>&lt;/span&gt;</b><span class="outer"> (a > 0) a = b;</span>
+      2 <b>&lt;span class="key"&gt;</b><span class="outer">else</span><b>&lt;/span&gt;</b><span class="outer"> a = c;</span>
+    <b class="outer">&lt;/div&gt;</b>
+</pre>
+</td>
+</tr>
+</table>
+
+<p>
+The first transformation highlights keywords by enclosing them with
+<tt>span</tt> elements which have the style <tt>key</tt> assigned.
+The second piped transformation adds the line numbers.
+Note that the result of the first Auto-Format transformation is
+processed by the second piped Auto-Format transformation, even though the
+result does not contain any more Auto-Format styles to be processed
+(assuming that the style <tt>key</tt> has no Auto-Format transformation assigned).
+If the style <tt>key</tt> had an Auto-Format style assigned, then the
+<tt>span</tt> elements would be processed after the pipeline of 
+transformations has been completely
+processed (assuming the <tt>span</tt> elements aren't removed by the
+piped transformations).
+</p>
+<p>
+A special case occurs, if the result of a transformation does not
+contain a single root element. If a transformation produces more than one root
+element, then the following piped transformation will be applied to all root
+elements. 
+If, on the other hand, a transformation does not return any XML element at
+all, e.g. it just returns a character string of type #PCDATA, then the following
+piped transformations will be skipped (note that an Auto-Format transformation
+can only be applied to a XML input-element).
+<!-- Note that for piped transformations
+it is <i>not</i> required that the intermediate result-elements have a style
+assigned. -->
+</p>
+
+<a name="af_example" ></a>
+<h2>Example: Implementing a dynamic template mechanism</h2>
+<p>
+As an example of implementing an Auto-Format transformation,
+this section describes the source code of the Auto-Format class 
+<tt>org.docma.plugin.examples.ApplyTemplate</tt>, which is included
+in the Docmenta installation package. See the <i>Docmenta Tutorial</i> for more information 
+on how to use this class. 
+Following illustration depicts the template concept that is implemented by the class:
+</p>
+<img src="apply_template_example_32bit.png">
+<p>
+In words: the <tt>org.docma.plugin.examples.ApplyTemplate</tt> class replaces the input-element by the content
+of a template node. The substring "<tt>$content</tt>" within the template is replaced
+by the inner content of the input-element and the substring "<tt>$title</tt>" is replaced 
+by the title-attribute of the input-element. The template node is identified by its
+alias name, which is provided as Auto-Format argument in the style definition 
+(here: notebox_template).
+</p>
+<p>
+Following the source code of the <tt>org.docma.plugin.examples.ApplyTemplate</tt> class, that implements
+this template concept:
+</p>
+<table width="100%" cellspacing="0" cellpadding="0" border="0" class="listing"><tr>
+<td valign="top" class="listnum_style" style="width:22pt;"><div class="__line__">1&#160;
+</div><div class="__line__">2&#160;
+</div><div class="__line__">3&#160;
+</div><div class="__line__">4&#160;
+</div><div class="__line__">5&#160;
+</div><div class="__line__">6&#160;
+</div><div class="__line__">7&#160;
+</div><div class="__line__">8&#160;
+</div><div class="__line__">9&#160;
+</div><div class="__line__">10&#160;
+</div><div class="__line__">11&#160;
+</div><div class="__line__">12&#160;
+</div><div class="__line__">13&#160;
+</div><div class="__line__">14&#160;
+</div><div class="__line__">15&#160;
+</div><div class="__line__">16&#160;
+</div><div class="__line__">17&#160;
+</div><div class="__line__">18&#160;
+</div><div class="__line__">19&#160;
+</div><div class="__line__">20&#160;
+</div><div class="__line__">21&#160;
+</div><div class="__line__">22&#160;
+</div><div class="__line__">23&#160;
+</div><div class="__line__">24&#160;
+</div><div class="__line__">25&#160;
+</div><div class="__line__">26&#160;
+</div><div class="__line__">27&#160;
+</div><div class="__line__">28&#160;
+</div><div class="__line__">29&#160;
+</div><div class="__line__">30&#160;
+</div><div class="__line__">31&#160;
+</div><div class="__line__">32&#160;
+</div><div class="__line__">33&#160;
+</div><div class="__line__">34&#160;
+</div><div class="__line__">35&#160;
+</div><div class="__line__">36&#160;
+</div><div class="__line__">37&#160;
+</div><div class="__line__">38&#160;
+</div><div class="__line__">39&#160;
+</div><div class="__line__">40&#160;
+</div><div class="__line__">41&#160;
+</div><div class="__line__">42&#160;
+</div><div class="__line__">43&#160;
+</div><div class="__line__">44&#160;
+</div><div class="__line__">45&#160;
+</div><div class="__line__">46&#160;
+</div><div class="__line__">47&#160;
+</div><div class="__line__">48&#160;
+</div></td>
+<td valign="top" class="listing_java"><div class="__line__"><span class="comment_style">/*</span>
+</div><div class="__line__"><span class="comment_style"> * ApplyTemplate.java</span>
+</div><div class="__line__"><span class="comment_style"> */</span>
+</div><div class="__line__">&#160;
+</div><div class="__line__"><span class="keyword_style">package</span> org.docma.plugin.examples;
+</div><div class="__line__">&#160;
+</div><div class="__line__"><span class="keyword_style">import</span> org.docma.plugin.*;
+</div><div class="__line__"><span class="keyword_style">import</span> java.io.*;
+</div><div class="__line__">&#160;
+</div><div class="__line__">&#160;
+</div><div class="__line__"><span class="keyword_style">public class</span> ApplyTemplate <span class="keyword_style">implements</span> AutoFormat
+</div><div class="__line__">{
+</div><div class="__line__">    <span class="keyword_style">private</span> ExportContext exportCtx;
+</div><div class="__line__">&#160;
+</div><div class="__line__">    <span class="keyword_style">public void</span> initialize(ExportContext ctx)
+</div><div class="__line__">    {
+</div><div class="__line__">        exportCtx = ctx;
+</div><div class="__line__">    }
+</div><div class="__line__">&#160;
+</div><div class="__line__">    <span class="keyword_style">public void</span> finished()
+</div><div class="__line__">    {
+</div><div class="__line__">        exportCtx = <span class="keyword_style">null</span>;
+</div><div class="__line__">    }
+</div><div class="__line__">&#160;
+</div><div class="__line__">    <span class="keyword_style">public void</span> transform(TransformationContext ctx) <span class="keyword_style">throws</span> Exception
+</div><div class="__line__">    {
+</div><div class="__line__">        String alias = ctx.getArgument(<span class="literal_style">0</span>);
+</div><div class="__line__">        String template = exportCtx.getContentStringByAlias(alias, <span class="keyword_style">true</span>);
+</div><div class="__line__">        <span class="keyword_style">if</span> (template == <span class="keyword_style">null</span>) {
+</div><div class="__line__">            <span class="keyword_style">throw new</span> Exception(<span class="char_style">"Could not find template with alias "</span> + alias);
+</div><div class="__line__">        }
+</div><div class="__line__">        String title = ctx.getTagAttributes().get(<span class="char_style">"title"</span>);
+</div><div class="__line__">        <span class="keyword_style">if</span> (title == <span class="keyword_style">null</span>) title = <span class="char_style">""</span>;
+</div><div class="__line__">        Writer out = ctx.getWriter();
+</div><div class="__line__">        out.write(template.replace(<span class="char_style">"$content"</span>, ctx.getInnerString()).replace(<span class="char_style">"$title"</span>, title));
+</div><div class="__line__">    }
+</div><div class="__line__">&#160;
+</div><div class="__line__">    <span class="keyword_style">public</span> String getShortInfo(String languageCode)
+</div><div class="__line__">    {
+</div><div class="__line__">        <span class="keyword_style">return</span> PluginUtil.getResourceString(<span class="keyword_style">this</span>.getClass(), languageCode, <span class="char_style">"shortInfo"</span>);
+</div><div class="__line__">    }
+</div><div class="__line__">&#160;
+</div><div class="__line__">    <span class="keyword_style">public</span> String getLongInfo(String languageCode)
+</div><div class="__line__">    {
+</div><div class="__line__">        <span class="keyword_style">return</span> PluginUtil.getResourceString(<span class="keyword_style">this</span>.getClass(), languageCode, <span class="char_style">"longInfo"</span>);
+</div><div class="__line__">    }
+</div><div class="__line__">&#160;
+</div><div class="__line__">}
+</div></td></tr></table>
+<div class="listing_caption">Listing 1: ApplyTemplate.java</div>
+<p>
+An Auto-Format transformation is a Java class that implements the interface <tt>org.docma.plugin.AutoFormat</tt>.
+The interface consists of five methods: <tt>initialize</tt>, <tt>finished</tt>, <tt>transform</tt>, <tt>getShortInfo</tt> and <tt>getLongInfo</tt>.
+</p>
+<p>
+The method <tt>initialize</tt> is intended for initialization of a new instance of the Auto-Format class, i.e. it is always called 
+by the export process before the method <tt>transform</tt> is called for the first time. The method gets an instance of the class 
+<tt>org.docma.plugin.ExportContext</tt> as argument, which provides access to the context of the running export. This includes
+</p>
+<ul>
+    <li>reading the content of a node within the product tree</li>
+    <li>getting the user interface language</li>
+    <li>getting the export language and format</li>
+    <li>getting a GenText property value</li>
+    <li>decoding/encoding character entities</li>
+    <li>writing to the export log</li>
+</ul>
+<p>
+In this example the method just assigns the argument to the field <tt>exportCtx</tt>. This way the method <tt>transform</tt>, 
+which is called for each element to be transformed, also has access to the export context.
+</p>
+<p>
+The method <tt>finished</tt> is called by the export process as soon as the complete export of the publication is finished.
+Therefore this method can be used to release any resources that have been allocated by the Auto-Format class. 
+In this example it just sets the field <tt>exportCtx</tt> to <tt>null</tt> (this is not required, though it allows the 
+garbage collector to free memory, which is allocated by the export context, as early as possible).
+</p>
+<p>
+The method <tt>transform</tt> actually executes the transformation of an element. This method is called by the export process
+each time an element within the publication has to be transformed by this Auto-Format class (i.e. only one instance of the
+Auto-Format class exists for one export process). The method gets an instance of the class 
+<tt>org.docma.plugin.TransformationContext</tt> as argument, which gives access to the element to be transformed
+and provides a writer object to write the transformation result.
+</p>
+<p>
+When an Auto-Format class is assigned to a style, the user can set Auto-Format arguments. With Auto-Format arguments
+the behavior of an Auto-Format class can be parameterized. In this example, the <tt>ApplyTemplate</tt> class expects one argument,
+which is the alias name of the content-node to be used as template. The Auto-Format arguments can be retrieved from 
+the transformation context. Therefore, the first action within the method <tt>transform</tt> is to get the first 
+Auto-Format argument from the transformation context:
+</p>
+<pre>
+  String alias = ctx.getArgument(0);  </pre>
+<p>
+The returned alias name is then used to retrieve the template-content:
+</p>
+<pre>
+  String template = exportCtx.getContentStringByAlias(alias, true);  </pre>
+<p>
+If no content-node with the given alias name is found, an exception is thrown. Note that throwing an exception will
+cause an error message in the export log. However the export continues without transforming the element.
+The next action is to retrieve the value of the input-element's title attribute:
+</p>
+<pre>
+  String title = ctx.getTagAttributes().get("title"); </pre>
+<p>
+If no title attribute is defined in the input-element, then the empty string is used as title:  
+</p>
+<pre>
+  if (title == null) title = "";  </pre>
+<p>
+Then the substring "$content" within the template is replaced by the inner content of the input-element:
+</p>
+<pre>
+  template.replace("$content", ctx.getInnerString())  </pre>
+<p>
+and the substring "$title" is replaced by the title value:
+</p>
+<pre>
+   .replace("$title", title)  </pre>
+<p>   
+Finally, the resulting string is returned as transformation result:
+</p>
+<pre>
+  Writer out = ctx.getWriter();
+  out.write(...);
+</pre>
+<p>
+The method <tt>getShortInfo</tt> is intended to return a human-readable text describing the
+purpose of this Auto-Format transformation in one sentence. 
+The method <tt>getLongInfo</tt> is intended to return a complete usage reference, including a 
+description of all supported Auto-Format arguments. 
+The returned text of both methods is displayed to the user of the
+Auto-Format class.
+For better readability the text returned by method <tt>getLongInfo</tt> can include
+XHTML tags, which allows basic formatting of the text. The text which is returned by both methods should
+be in the language given by the argument <i>languageCode</i>. At least the language code
+"en" has to be supported (i.e. the descriptions have to be available at least in English).
+</p>
+<p>
+For long descriptions and to allow the translation of the descriptions without having to touch
+the source code of the classes, the text returned by the methods <tt>getShortInfo</tt> and 
+<tt>getLongInfo</tt> should be stored in external resource files. You can use the static method 
+<tt>getResourceString</tt> of the utility class <tt>org.docma.plugin.PluginUtil</tt> 
+to load a language dependent property from an external resource file, as shown in this example.
+The path of the resource file is derived from the provided class and language code
+by replacing all dots within the full-qualified class name by a dash ("/"), 
+appending the language code separated by an underscore and attaching the
+file extension ".xml".
+Therefore, in our example the path to the resource file for the English language 
+(language code "en") is <tt>org/docma/plugin/example/ApplyTemplate_en.xml</tt>. 
+In other words, a resource file with name <tt>ApplyTemplate_en.xml</tt> has to be located in the same folder
+within the jar archive where the corresponding class file is located.
+</p>
+<p>
+The format of the resource file is the XML properties format as used by the 
+Java class <tt>java.util.Properties</tt> (see the 
+Java Standard Edition API documentation for more information).
+Following an example of the resource file <tt>ApplyTemplate_en.xml</tt>:
+</p>
+<table width="100%" cellspacing="0" cellpadding="0" border="0" class="listing">
+<tr><td valign="top" class="listnum_style" style="width:22pt;"><div class="__line__">1&#160;
+</div><div class="__line__">2&#160;
+</div><div class="__line__">3&#160;
+</div><div class="__line__">4&#160;
+</div><div class="__line__">5&#160;
+</div><div class="__line__">6&#160;
+</div><div class="__line__">7&#160;
+</div><div class="__line__">8&#160;
+</div><div class="__line__">9&#160;
+</div><div class="__line__">10&#160;
+</div><div class="__line__">11&#160;
+</div><div class="__line__">12&#160;
+</div><div class="__line__">13&#160;
+</div><div class="__line__">14&#160;
+</div><div class="__line__">15&#160;
+</div><div class="__line__">16&#160;
+</div><div class="__line__">17&#160;
+</div><div class="__line__">18&#160;
+</div><div class="__line__">19&#160;
+</div></td><td valign="top" class="listing_xml"><div class="__line__"><span class="xmlintro_style">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+</div><div class="__line__"><span class="xmlintro_style">&lt;!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"&gt;</span>
+</div><div class="__line__"><span class="tag_style">&lt;properties<span class="attrib_style"></span>&gt;</span>
+</div><div class="__line__">  <span class="tag_style">&lt;entry <span class="attrib_style">key="shortInfo"</span>&gt;</span>Format input using a template with placeholder strings.<span class="tag_style">&lt;/entry&gt;</span>
+</div><div class="__line__">  <span class="tag_style">&lt;entry <span class="attrib_style">key="longInfo"</span>&gt;</span><span class="cdata_style">&lt;![CDATA[</span>
+</div><div class="__line__"><span class="cdata_style">  &lt;big&gt;&lt;b&gt;Arguments:&lt;/b&gt;&lt;/big&gt;</span>
+</div><div class="__line__"><span class="cdata_style">  &lt;ul&gt;</span>
+</div><div class="__line__"><span class="cdata_style">    &lt;li&gt;&lt;b&gt;&lt;tt&gt;&lt;i&gt;ALIAS&lt;/i&gt;&lt;/tt&gt;&lt;/b&gt;:</span>
+</div><div class="__line__"><span class="cdata_style">    &lt;br /&gt;The alias name of the template node.&lt;/li&gt;</span>
+</div><div class="__line__"><span class="cdata_style">  &lt;/ul&gt;</span>
+</div><div class="__line__"><span class="cdata_style">  &lt;p&gt;&lt;big&gt;&lt;b&gt;Description:&lt;/b&gt;&lt;/big&gt;&lt;/p&gt;</span>
+</div><div class="__line__"><span class="cdata_style">  &lt;p&gt;</span>
+</div><div class="__line__"><span class="cdata_style">    The content-node given by alias name &lt;tt&gt;&lt;i&gt;ALIAS&lt;/i&gt;&lt;/tt&gt;</span>
+</div><div class="__line__"><span class="cdata_style">    is used as a template. It is assumed that the template content </span>
+</div><div class="__line__"><span class="cdata_style">    contains the substrings "&lt;tt&gt;$title&lt;/tt&gt;" and "&lt;tt&gt;$content&lt;/tt&gt;".</span>
+</div><div class="__line__"><span class="cdata_style">  &lt;/p&gt;</span>
+</div><div class="__line__"><span class="cdata_style">  ]]&gt;</span>
+</div><div class="__line__">  <span class="tag_style">&lt;/entry&gt;</span>
+</div><div class="__line__"><span class="tag_style">&lt;/properties&gt;</span>
+</div></td></tr></table>
+<div class="listing_caption">Listing 2: ApplyTemplate_en.xml</div>
+<p>
+Note that a CDATA section is used for the value of the <tt>longInfo</tt> property, because the property value contains 
+XHTML tags, which would otherwise interfere with the XML properties format.
+</p>
+<p>
+To use the Auto-Format transformation, just place the compiled <tt>ApplyTemplate</tt> class together with the resource file <tt>ApplyTemplate_en.xml</tt>
+into the class path of the Docmenta application.
+</p>
+<p>
+<b>Improving the performance of the implementation</b>
+</p>
+<p>
+As mentioned above, the method <tt>transform</tt> is called for each occurence of an element 
+to be transformed. Therefore the performance can be improved by caching the template content.
+Following listing gives the improved source code of the <tt>ApplyTemplate</tt> class 
+(the changed lines are highlighted):  
+</p>
+<table width="100%" cellspacing="0" cellpadding="0" border="0" class="listing">
+<tr><td valign="top" class="listnum_style" style="width:22pt;"><div class="__line__">1&#160;
+</div><div class="__line__">2&#160;
+</div><div class="__line__">3&#160;
+</div><div class="__line__">4&#160;
+</div><div class="__line__">5&#160;
+</div><div class="__line__">6&#160;
+</div><div class="__line__">7&#160;
+</div><div class="__marknum__">8&#160;
+</div><div class="__line__">9&#160;
+</div><div class="__line__">10&#160;
+</div><div class="__line__">11&#160;
+</div><div class="__line__">12&#160;
+</div><div class="__line__">13&#160;
+</div><div class="__line__">14&#160;
+</div><div class="__line__">15&#160;
+</div><div class="__line__">16&#160;
+</div><div class="__line__">17&#160;
+</div><div class="__marknum__">18&#160;
+</div><div class="__line__">19&#160;
+</div><div class="__line__">20&#160;
+</div><div class="__line__">21&#160;
+</div><div class="__line__">22&#160;
+</div><div class="__marknum__">23&#160;
+</div><div class="__line__">24&#160;
+</div><div class="__line__">25&#160;
+</div><div class="__line__">26&#160;
+</div><div class="__line__">27&#160;
+</div><div class="__line__">28&#160;
+</div><div class="__marknum__">29&#160;
+</div><div class="__line__">30&#160;
+</div><div class="__line__">31&#160;
+</div><div class="__line__">32&#160;
+</div><div class="__line__">33&#160;
+</div><div class="__line__">34&#160;
+</div><div class="__marknum__">35&#160;
+</div><div class="__marknum__">36&#160;
+</div><div class="__marknum__">37&#160;
+</div><div class="__marknum__">38&#160;
+</div><div class="__marknum__">39&#160;
+</div><div class="__marknum__">40&#160;
+</div><div class="__marknum__">41&#160;
+</div><div class="__marknum__">42&#160;
+</div><div class="__line__">43&#160;
+</div><div class="__line__">44&#160;
+</div><div class="__line__">45&#160;
+</div><div class="__line__">46&#160;
+</div><div class="__line__">47&#160;
+</div><div class="__line__">48&#160;
+</div><div class="__line__">49&#160;
+</div><div class="__line__">50&#160;
+</div><div class="__line__">51&#160;
+</div><div class="__line__">52&#160;
+</div><div class="__line__">53&#160;
+</div><div class="__line__">54&#160;
+</div><div class="__line__">55&#160;
+</div><div class="__line__">56&#160;
+</div><div class="__line__">57&#160;
+</div><div class="__line__">58&#160;
+</div><div class="__line__">59&#160;
+</div></td><td valign="top" class="listing_java"><div class="__line__"><span class="comment_style">/*</span>
+</div><div class="__line__"><span class="comment_style"> * ApplyTemplate.java</span>
+</div><div class="__line__"><span class="comment_style"> */</span>
+</div><div class="__line__">&#160;
+</div><div class="__line__"><span class="keyword_style">package</span> org.docma.plugin.examples;
+</div><div class="__line__">&#160;
+</div><div class="__line__"><span class="keyword_style">import</span> org.docma.plugin.*;
+</div><div class="__markline__"><span class="keyword_style">import</span> java.util.*;
+</div><div class="__line__"><span class="keyword_style">import</span> java.io.*;
+</div><div class="__line__">&#160;
+</div><div class="__line__"><span class="comment_style">/**</span>
+</div><div class="__line__"><span class="comment_style"> *</span>
+</div><div class="__line__"><span class="comment_style"> * @author MP</span>
+</div><div class="__line__"><span class="comment_style"> */</span>
+</div><div class="__line__"><span class="keyword_style">public class</span> ApplyTemplate <span class="keyword_style">implements</span> AutoFormat
+</div><div class="__line__">{
+</div><div class="__line__">    <span class="keyword_style">private</span> ExportContext exportCtx;
+</div><div class="__markline__">    <span class="keyword_style">private</span> Map&lt;String, String&gt; templateMap;
+</div><div class="__line__">&#160;
+</div><div class="__line__">    <span class="keyword_style">public void</span> initialize(ExportContext ctx)
+</div><div class="__line__">    {
+</div><div class="__line__">        exportCtx = ctx;
+</div><div class="__markline__">        templateMap = <span class="keyword_style">new</span> HashMap&lt;String, String&gt;();
+</div><div class="__line__">    }
+</div><div class="__line__">&#160;
+</div><div class="__line__">    <span class="keyword_style">public void</span> finished()
+</div><div class="__line__">    {
+</div><div class="__line__">        exportCtx = <span class="keyword_style">null</span>;
+</div><div class="__markline__">        templateMap = <span class="keyword_style">null</span>;
+</div><div class="__line__">    }
+</div><div class="__line__">&#160;
+</div><div class="__line__">    <span class="keyword_style">public void</span> transform(TransformationContext ctx) <span class="keyword_style">throws</span> Exception
+</div><div class="__line__">    {
+</div><div class="__line__">        String alias = ctx.getArgument(<span class="literal_style">0</span>);
+</div><div class="__markline__">        String template = templateMap.get(alias);
+</div><div class="__markline__">        <span class="keyword_style">if</span> (template == <span class="keyword_style">null</span>) {
+</div><div class="__markline__">            template = exportCtx.getContentStringByAlias(alias, <span class="keyword_style">true</span>);
+</div><div class="__markline__">            <span class="keyword_style">if</span> (template == <span class="keyword_style">null</span>) {
+</div><div class="__markline__">                <span class="keyword_style">throw new</span> Exception(<span class="char_style">"Could not find template with alias "</span> + alias);
+</div><div class="__markline__">            }
+</div><div class="__markline__">            templateMap.put(alias, template);
+</div><div class="__markline__">        }
+</div><div class="__line__">        String title = ctx.getTagAttributes().get(<span class="char_style">"title"</span>);
+</div><div class="__line__">        <span class="keyword_style">if</span> (title == <span class="keyword_style">null</span>) title = <span class="char_style">""</span>;
+</div><div class="__line__">        Writer out = ctx.getWriter();
+</div><div class="__line__">        out.write(template.replace(<span class="char_style">"$content"</span>, ctx.getInnerString()).replace(<span class="char_style">"$title"</span>, title));
+</div><div class="__line__">    }
+</div><div class="__line__">&#160;
+</div><div class="__line__">    <span class="keyword_style">public</span> String getShortInfo(String languageCode)
+</div><div class="__line__">    {
+</div><div class="__line__">        <span class="keyword_style">return</span> PluginUtil.getResourceString(<span class="keyword_style">this</span>.getClass(), languageCode, <span class="char_style">"shortInfo"</span>);
+</div><div class="__line__">    }
+</div><div class="__line__">&#160;
+</div><div class="__line__">    <span class="keyword_style">public</span> String getLongInfo(String languageCode)
+</div><div class="__line__">    {
+</div><div class="__line__">        <span class="keyword_style">return</span> PluginUtil.getResourceString(<span class="keyword_style">this</span>.getClass(), languageCode, <span class="char_style">"longInfo"</span>);
+</div><div class="__line__">    }
+</div><div class="__line__">&#160;
+</div><div class="__line__">}
+</div></td></tr></table>
+<div class="listing_caption">Listing 3: ApplyTemplate.java  (improved)</div>
+<p>
+Note that different styles can set different Auto-Format arguments, 
+i.e. it is not sufficient to cache just a single template. Therefore,
+in the implementation above, a <tt>java.util.HashMap</tt> object is used to cache the templates.
+</p>
+</body>
+</html>
