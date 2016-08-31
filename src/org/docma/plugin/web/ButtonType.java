@@ -28,7 +28,7 @@ public final class ButtonType
     public static final ButtonType RETRY = new ButtonType("RETRY"); 
     public static final ButtonType YES = new ButtonType("YES");
 
-    private String button_type;
+    private final String button_type;
     
     ButtonType(String btn_type)
     {

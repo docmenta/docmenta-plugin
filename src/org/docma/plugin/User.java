@@ -20,6 +20,7 @@ package org.docma.plugin;
 public interface User 
 {
     String getId();
+    String getLoginId();
     String getFirstName();
     String getLastName();
     String getName();

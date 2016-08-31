@@ -1,5 +1,5 @@
 /*
- * InvalidVersionIdException.java
+ * InvalidAliasException.java
  * 
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
@@ -17,21 +17,25 @@ package org.docma.plugin;
  *
  * @author MP
  */
-public class InvalidVersionIdException extends DocmaException 
+public class InvalidAliasException extends DocmaException 
 {
 
     /**
-     * Creates a new instance of <code>InvalidVersionIdException</code> without
+     * Creates a new instance of <code>InvalidAliasException</code> without
      * detail message.
      */
-    InvalidVersionIdException() 
+    public InvalidAliasException() 
     {
     }
 
-    public InvalidVersionIdException(Throwable cause) 
+    /**
+     * Constructs an instance of <code>InvalidAliasException</code> with the
+     * specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    public InvalidAliasException(String msg) 
     {
-        super(cause);
+        super(msg);
     }
-
-    
 }

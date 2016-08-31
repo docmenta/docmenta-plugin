@@ -17,7 +17,7 @@ package org.docma.plugin;
  *
  * @author MP
  */
-public class StoreClosedException extends RuntimeException {
+public class StoreClosedException extends DocmaException {
 
     /**
      * Creates a new instance of <code>StoreClosedException</code> without

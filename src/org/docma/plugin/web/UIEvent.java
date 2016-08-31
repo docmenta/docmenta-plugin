@@ -20,6 +20,14 @@ package org.docma.plugin.web;
 public interface UIEvent 
 {
     String getName();
-    boolean isButtonClick();
+    String getTargetId();
+    WebUserSession getSession();
+    boolean isClick();
+    boolean isOpen();
+    boolean isSelect();
+    boolean isButtonTarget();
+    boolean isTabTarget();
+    boolean isMenuItemTarget();
+    boolean isMenuTarget();
     ButtonType getButtonType();
 }

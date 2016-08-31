@@ -1,5 +1,5 @@
 /*
- * InvalidVersionIdException.java
+ * OutOfRangeException.java
  * 
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
@@ -14,24 +14,29 @@
 package org.docma.plugin;
 
 /**
- *
+ * This exception indicates that some value is out of the expected range.
+ * 
  * @author MP
  */
-public class InvalidVersionIdException extends DocmaException 
+public class OutOfRangeException extends DocmaException 
 {
 
     /**
-     * Creates a new instance of <code>InvalidVersionIdException</code> without
-     * detail message.
+     * Creates a new instance of <code>OutOfRangeException</code> without detail
+     * message.
      */
-    InvalidVersionIdException() 
+    public OutOfRangeException() 
     {
     }
 
-    public InvalidVersionIdException(Throwable cause) 
+    /**
+     * Constructs an instance of <code>OutOfRangeException</code> with the
+     * specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    public OutOfRangeException(String msg) 
     {
-        super(cause);
+        super(msg);
     }
-
-    
 }

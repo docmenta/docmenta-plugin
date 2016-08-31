@@ -23,6 +23,5 @@ public interface WebPlugin extends Plugin
 {
     void onInitMainWindow(WebPluginContext ctx, WebUserSession webSess);
     void onShowConfigDialog(WebPluginContext ctx, WebUserSession webSess);
-    void onSelectTab(String tabId, WebPluginContext ctx, WebUserSession webSess);
     
 }

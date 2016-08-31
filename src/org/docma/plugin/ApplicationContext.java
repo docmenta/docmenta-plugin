@@ -24,11 +24,16 @@ public interface ApplicationContext
     // String getApplicationProperty(String name);
     // void   setApplicationProperty(String name, String value);
     // void   setApplicationProperties(Properties props);
+    
     boolean hasObject(String objectName);
     Object getObject(String objectName);
     void setObject(String objectName, Object instance);
+
+    Logger getLogger();
+    
     UserManager getUserManager();
     void setUserManager(UserManager um);
+    
     boolean userExists(String userId);
     User getUser(String userId);
 }

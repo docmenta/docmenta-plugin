@@ -1,5 +1,5 @@
 /*
- * InvalidVersionIdException.java
+ * Logger.java
  * 
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
@@ -17,21 +17,9 @@ package org.docma.plugin;
  *
  * @author MP
  */
-public class InvalidVersionIdException extends DocmaException 
+public interface Logger 
 {
-
-    /**
-     * Creates a new instance of <code>InvalidVersionIdException</code> without
-     * detail message.
-     */
-    InvalidVersionIdException() 
-    {
-    }
-
-    public InvalidVersionIdException(Throwable cause) 
-    {
-        super(cause);
-    }
-
-    
+    void info(String msg);
+    void warning(String msg);
+    void error(String msg);
 }

@@ -14,12 +14,22 @@
 package org.docma.plugin;
 
 /**
- *
+ * The <code>Plugin</code> interface provides hooks for extending the 
+ * application's functionality. This interface needs to be implemented by a 
+ * plug-in developer.
+ * A class that implements this interface will be instanciated by the plug-in 
+ * framework using the default constructor of the class (i.e. the constructor 
+ * without arguments).
+ * The methods of this interface allow the plug-in to react on events that
+ * are triggered by the framework during the lifecycle of a plug-in.
+ * For example, on startup of the application server, the onLoad event is 
+ * triggered for all installed and enabled plug-ins.
+ * 
  * @author MP
  */
 public interface Plugin 
 {
-    void onLoad(PluginContext ctx) throws Exception;  // e.g. check license key, register AutoFormat classes
+    void onLoad(PluginContext ctx) throws Exception;  // e.g. register AutoFormat classes
     void onUnload(PluginContext ctx) throws Exception;  // e.g. remove AutoFormat classes
 
     // void onStartSession(PluginContext ctx, UserSession userSess);

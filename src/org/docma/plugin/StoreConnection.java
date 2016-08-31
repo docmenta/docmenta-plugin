@@ -13,6 +13,8 @@
  */
 package org.docma.plugin;
 
+import java.util.Properties;
+
 /**
  *
  * @author MP
@@ -23,18 +25,34 @@ public interface StoreConnection
     VersionId getVersionId();
     boolean isClosed();
     
-    Node getNodeById(String id);
-    Style[] getStyles();
-    CharEntity[] getCharEntities();
+    Node getNodeById(String id) throws DocmaException;
+    Style[] getStyles() throws DocmaException;
+    
+    CharEntity[] getCharEntities() throws DocmaException;
+    String encodeCharEntities(String text, boolean symbolic) throws DocmaException;
 
-    String getTranslationMode();
-    void enterTranslationMode(String langCode);
-    void leaveTranslationMode();
-    String getLanguageCode();
+    String getTranslationMode() throws DocmaException;
+    void enterTranslationMode(String langCode) throws DocmaException;
+    void leaveTranslationMode() throws DocmaException;
+    String getLanguageCode() throws DocmaException;
 
-    void startTransaction() throws Exception;
-    void commitTransaction() throws Exception;
+    void startTransaction() throws DocmaException;
+    void commitTransaction() throws DocmaException;
     void rollbackTransaction();
     boolean runningTransaction();
+
+    /**
+     * Indicates whether <code>name</code> complies to the rules of a valid
+     * alias. Note that this method only checks the syntactical rules.
+     * It does <em>not</em> check whether <code>name</code> is already used
+     * by another node.
+     * 
+     * @param name  the name to check
+     * @return  <code>true</code> if <code>name</code> is a valid alias;
+     *          <code>false</code> otherwise
+     */
+    boolean isValidAlias(String name);
+    
+    String prepareXHTML(String content, Properties props) throws DocmaException;
     
 }

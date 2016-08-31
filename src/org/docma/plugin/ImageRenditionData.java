@@ -1,6 +1,6 @@
 /*
- * InvalidVersionIdException.java
- * 
+ * ImageRenditionData.java
+ *
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
  *  This file is part of Docmenta. Docmenta is free software: you can 
@@ -17,21 +17,7 @@ package org.docma.plugin;
  *
  * @author MP
  */
-public class InvalidVersionIdException extends DocmaException 
+public interface ImageRenditionData 
 {
-
-    /**
-     * Creates a new instance of <code>InvalidVersionIdException</code> without
-     * detail message.
-     */
-    InvalidVersionIdException() 
-    {
-    }
-
-    public InvalidVersionIdException(Throwable cause) 
-    {
-        super(cause);
-    }
-
     
 }

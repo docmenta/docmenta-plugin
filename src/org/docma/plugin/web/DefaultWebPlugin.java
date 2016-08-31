@@ -30,9 +30,6 @@ public class DefaultWebPlugin extends DefaultPlugin implements WebPlugin
     {
     }
 
-    public void onSelectTab(String tabId, WebPluginContext ctx, WebUserSession webSess) 
-    {
-    }
 
 
 //    public void onEnableClick(WebPluginContext ctx, WebUserSession webSess) 
