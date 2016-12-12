@@ -38,9 +38,7 @@ public final class ButtonType
     @Override
     public int hashCode() 
     {
-        int hash = 5;
-        hash = 17 * hash + (this.button_type != null ? this.button_type.hashCode() : 0);
-        return hash;
+        return (this.button_type != null) ? this.button_type.hashCode() : 0;
     }
 
     @Override
@@ -56,8 +54,8 @@ public final class ButtonType
             return false;
         }
         final ButtonType other = (ButtonType) obj;
-        if ((this.button_type == null) ? (other.button_type != null) : 
-                                         !this.button_type.equals(other.button_type)) {
+        if ((this.button_type == null) ? (other.button_type != null) 
+                                       : !this.button_type.equals(other.button_type)) {
             return false;
         }
         return true;

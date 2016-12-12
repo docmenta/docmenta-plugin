@@ -1,5 +1,5 @@
 /*
- * OutputConfig.java
+ * ImageRenditionInfo.java
  *
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
@@ -17,12 +17,10 @@ package org.docma.plugin;
  *
  * @author MP
  */
-public interface OutputConfig
+public interface ImageRenditionInfo 
 {
-    String getId();
+    String getName();
     String getFormat();
-    String getSubformat();
-    
-    String getProperty(String propName);
-    
+    int getMaxHeight();
+    int getMaxWidth();    
 }

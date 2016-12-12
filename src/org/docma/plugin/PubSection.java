@@ -56,6 +56,37 @@ public interface PubSection extends Group
     String getTitle() throws DocmaException;
 
     /**
+     * Returns the section title for the given language code.
+     * If the <code>lang_code</code> argument is <code>null</code>,
+     * then the title for the original language is returned.
+     * If no title for the original language is assigned, then an empty string 
+     * is returned.
+     *
+     * <p><em>Retrieving translated attribute values:</em><br>
+     * If the <code>lang_code</code> argument is <em>not</em> <code>null</code>,
+     * then this method returns the title for the translation language
+     * identified by <code>lang_code</code>. If no translated title for the 
+     * language <code>lang_code</code> exists, then <code>null</code> is 
+     * returned.
+     * 
+     * <p>Note that a return value other than <code>null</code> does not  
+     * necessarily mean that the title is semantically translated. This method 
+     * just returns the title that has been stored for the given translation 
+     * language.
+     * For example, it is possible to read the section title for the original
+     * language, then switch to translation mode and set this value  
+     * as the translated title. In this case the translated title is  
+     * identical to the original title.</p>
+     * 
+     * @param lang_code  the language code of a translation language, 
+     *                   or <code>null</code>
+     * @return  the section title
+     * @throws DocmaException  if the title cannot be retrieved, for example
+     *                         due to a connection error
+     */
+    String getTitle(String lang_code) throws DocmaException;
+
+    /**
      * Returns the same value as <code>getTitle()</code>, but with special 
      * characters encoded as character-entities.
      * If no title is assigned, then an empty string is returned.
@@ -98,19 +129,6 @@ public interface PubSection extends Group
      * @see #getTitle()
      */
     void setTitle(String value) throws DocmaException;
-
-    /**
-     * Indicates whether a translated title for the language  
-     * <code>lang_code</code> exists.
-     * 
-     * @param lang_code  the language code of the translation language
-     * @return  <code>true</code> if a translation for the given language exists;
-     *          <code>false</code> otherwise
-     * @throws DocmaException  If the translation status cannot be retrieved 
-     *                         (for example, due to a connection error)
-     * @see #getTitle()
-     */
-    boolean isTitleTranslated(String lang_code) throws DocmaException;
 
     //************************************************************
     //**************   Methods to think about   ******************  

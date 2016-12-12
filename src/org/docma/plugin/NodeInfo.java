@@ -1,6 +1,6 @@
 /*
- * OutputConfig.java
- *
+ * NodeInfo.java
+ * 
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
  *  This file is part of Docmenta. Docmenta is free software: you can 
@@ -17,12 +17,9 @@ package org.docma.plugin;
  *
  * @author MP
  */
-public interface OutputConfig
+public interface NodeInfo 
 {
     String getId();
-    String getFormat();
-    String getSubformat();
-    
-    String getProperty(String propName);
-    
+    String getTitle();
+    String getAlias();
 }

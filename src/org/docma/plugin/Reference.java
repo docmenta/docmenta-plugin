@@ -25,7 +25,7 @@ package org.docma.plugin;
 public interface Reference extends Node 
 {
     /**
-     * Returns the title for this reference.
+     * Returns the title of this reference.
      * If no title is assigned, then an empty string is returned.
      *
      * <p>Generally, a reference does not need a title by itself, given that 
@@ -43,10 +43,42 @@ public interface Reference extends Node
      * @return the title of the reference or an empty string
      * @throws DocmaException  if the title cannot be retrieved, 
      *                         for example due to a connection error
-     * @see #setTitle(String)
+     * @see #getTitle(String)
      * @see #getTitleEntityEncoded()
+     * @see #setTitle(String)
      */
     String getTitle() throws DocmaException;
+
+    /**
+     * Returns the title of this reference for the given language code.
+     * If the <code>lang_code</code> argument is <code>null</code>,
+     * then the title for the original language is returned.
+     * If no title for the original language is assigned, then an empty string 
+     * is returned.
+     *
+     * <p><em>Retrieving translated attribute values:</em><br>
+     * If the <code>lang_code</code> argument is <em>not</em> <code>null</code>,
+     * then this method returns the title for the translation language
+     * identified by <code>lang_code</code>. If no translated title for the 
+     * language <code>lang_code</code> exists, then <code>null</code> is 
+     * returned.
+     * 
+     * <p>Note that a return value other than <code>null</code> does not  
+     * necessarily mean that the title is semantically translated. This method 
+     * just returns the title that has been stored for the given translation 
+     * language.
+     * For example, it is possible to read the title for the original
+     * language, then switch to translation mode and set this value  
+     * as the translated title. In this case the translated title is  
+     * identical to the original title.</p>
+     * 
+     * @param lang_code  the language code of a translation language, 
+     *                   or <code>null</code>
+     * @return  the reference title
+     * @throws DocmaException  if the title cannot be retrieved, for example
+     *                         due to a connection error
+     */
+    String getTitle(String lang_code) throws DocmaException;
 
     /**
      * Returns the same value as <code>getTitle()</code>, but with special 
@@ -68,6 +100,7 @@ public interface Reference extends Node
      * @throws DocmaException  if the title cannot be retrieved, 
      *                         for example due to a connection error
      * @see #getTitle()
+     * @see #getTitle(String)
      * @see #setTitle(String)
      */
     String getTitleEntityEncoded() throws DocmaException;
@@ -94,6 +127,7 @@ public interface Reference extends Node
      *                         (for example, due to access rights or a 
      *                         connection error)
      * @see #getTitle()
+     * @see #getTitle(String)
      */
     void setTitle(String value) throws DocmaException;
 
@@ -164,23 +198,25 @@ public interface Reference extends Node
     Node[] getTargetNodes() throws DocmaException;
 
     /**
-     * Returns whether the node is an include-reference.
+     * Returns whether the node is a content inclusion.
+     * 
+     * @return  <code>true</code> if this node is a content inclusion reference;
+     *          <code>false</code> otherwise
      */
-    boolean isIncludeReference();
+    boolean isContentInclusion() throws DocmaException;
     
     /**
+     * Returns whether the node is a section inclusion.
+     * 
+     * @return  <code>true</code> if this node is a section inclusion reference;
+     *          <code>false</code> otherwise
+     */
+    boolean isSectionInclusion() throws DocmaException;
+
+    /*
      * Returns whether the node is an image-inclusion.
      */
     // public boolean isImageIncludeReference();
     
-    /**
-     * Returns whether the node is a content-inclusion.
-     */
-    boolean isContentIncludeReference();
-    
-    /**
-     * Returns whether the node is a section-inclusion.
-     */
-    boolean isSectionIncludeReference();
     
 }

@@ -1,6 +1,6 @@
 /*
- * OutputConfig.java
- *
+ * RuleSeverity.java
+ * 
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
  *  This file is part of Docmenta. Docmenta is free software: you can 
@@ -11,18 +11,13 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Docmenta.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.docma.plugin;
+package org.docma.plugin.rules;
 
 /**
  *
  * @author MP
  */
-public interface OutputConfig
+public enum RuleSeverity 
 {
-    String getId();
-    String getFormat();
-    String getSubformat();
-    
-    String getProperty(String propName);
-    
+    INFO, WARNING, ERROR;    
 }

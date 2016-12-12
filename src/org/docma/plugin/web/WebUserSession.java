@@ -13,7 +13,6 @@
  */
 package org.docma.plugin.web;
 
-import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.docma.plugin.*;
@@ -24,9 +23,6 @@ import org.docma.plugin.*;
  */
 public interface WebUserSession extends UserSession
 {
-    // Internationalization methods
-    String  getLabel(String key, Object... args);
-
     // Methods to extend UI    
     String addDialog(String zulPath);
     Object getDialog(String dialogId);

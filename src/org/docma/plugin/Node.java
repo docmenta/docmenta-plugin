@@ -264,7 +264,6 @@ public interface Node
      * @throws DocmaException  if the alias cannot be retrieved, for example
      *                         due to a connection error
      * @see #getAlias()
-     * @see PluginUtil#getLinkAlias(String)
      */
     String getLinkName() throws DocmaException;
 

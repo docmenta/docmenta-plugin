@@ -1,6 +1,6 @@
 /*
- * ImageRenditionData.java
- *
+ * Language.java
+ * 
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
  *  This file is part of Docmenta. Docmenta is free software: you can 
@@ -17,7 +17,21 @@ package org.docma.plugin;
  *
  * @author MP
  */
-public interface ImageRenditionData 
+public interface Language 
 {
+    /**
+     * The language code.
+     * 
+     * @return lowercase two-letter ISO-639 code
+     */
+    String getCode();
     
+    /**
+     * Returns a name for the language that is appropriate for display 
+     * to the user.
+     * 
+     * @return human readable language name
+     */
+    String getDisplayName();
+
 }

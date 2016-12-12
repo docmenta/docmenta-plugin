@@ -19,5 +19,8 @@ package org.docma.plugin;
  */
 public interface ContentAnchor 
 {
-    
+    String getAlias();
+    String getTitle();
+    int getTagPosition();
+    Content getNode();
 }

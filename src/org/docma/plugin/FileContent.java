@@ -41,6 +41,10 @@ public interface FileContent extends Content
      * that is used in the filename (see {@link #getFileName()}).
      * If no file extension exists, then an empty string is returned.
      * 
+     * <p><em>Translation-mode:</em><br>
+     * The file extension of translated content is always identical to the file 
+     * extension of the original content.</p>
+     * 
      * @return  the file extension (<em>without</em> leading dot character), 
                 or an empty string
      * @throws DocmaException  if the file extension cannot be retrieved, 
@@ -49,12 +53,18 @@ public interface FileContent extends Content
      * @see #getFileName().
      * @see #setFileName(String).
      */
-    String getFileExtension() throws DocmaException;   // Transform exception to null
+    String getFileExtension() throws DocmaException;
 
     /**
      * Sets the file extension that is used as suffix in the filename.
      * Supplying <code>null</code> removes any previously assigned 
      * file extension.
+     * 
+     * <p><em>Translation-mode:</em><br>
+     * Setting the file extension, while the session is in translation-mode, is  
+     * <em>not</em> allowed and causes an exception. The file extension of  
+     * translated content is always identical to the file extension of the 
+     * original content.</p>
      *
      * @param ext  the file extension, or <code>null</code>
      * @throws DocmaException  If <code>ext</code> is no valid file 
@@ -78,12 +88,12 @@ public interface FileContent extends Content
      *
      * <p><i>name</i>.<i>ext</i></p>
      *
-     * <p>In other words, a <i>name</i>-part is followed by a 
-     * <i>ext</i>-part. Both parts are separated by a dot. As a convenience,
-     * the <i>ext</i>-part can also be retrieved separately, through the  
+     * <p>In other words, a <i>name</i>-part is followed by an 
+     * <i>ext</i>-part. Both parts are separated by a dot.
+     * The <i>ext</i>-part can also be retrieved separately, through the  
      * {@link #getFileExtension()} method.
-     * If no file extension is assigned, then the filename consists of the 
-     * <i>name</i>-part only.</p>
+     * If no file extension is assigned, then the filename consists only of the 
+     * <i>name</i>-part.</p>
      *
      * <p>For file types that are <em>not</em> specially handled by Docmenta,
      * the <i>name</i>-part can be a user-defined string. There is 
@@ -189,6 +199,8 @@ public interface FileContent extends Content
      * Sets the character set for this file node. 
      * The assigned character set is stored as a node attribute (that means 
      * the character set persists over sessions and is valid for all users). 
+     * If the <code>charsetName</code> argument is <code>null</code>, then the
+     * character set is set back to the default (UTF-8).
      * 
      * <p>Be aware that invoking this method does <em>not</em> change the   
      * encoding of existing content. This method just sets the character set    
@@ -200,7 +212,8 @@ public interface FileContent extends Content
      * the statement <code>n.setCharset(cs)</code> has to be executed before  
      * <code>n.setContentString(txt)</code>.</p>
      *
-     * @param charsetName  the character set to be used for encoding/decoding content
+     * @param charsetName  the character set to be used for encoding/decoding 
+     *                     content, or <code>null</code>
      * @throws DocmaException  If changing the character set is not possible
      *                         (for example, due to access rights or a 
      *                         connection error)

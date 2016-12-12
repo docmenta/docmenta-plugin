@@ -1,6 +1,6 @@
 /*
- * OutputConfig.java
- *
+ * LabelProvider.java
+ * 
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
  *  This file is part of Docmenta. Docmenta is free software: you can 
@@ -11,18 +11,15 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Docmenta.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.docma.plugin;
+package org.docma.plugin.internals;
+
+import java.util.Locale;
 
 /**
  *
  * @author MP
  */
-public interface OutputConfig
+public interface LabelProvider 
 {
-    String getId();
-    String getFormat();
-    String getSubformat();
-    
-    String getProperty(String propName);
-    
+    public String getLabel(Locale locale, String key, Object[] args);
 }

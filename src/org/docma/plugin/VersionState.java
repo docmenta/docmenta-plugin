@@ -1,5 +1,5 @@
 /*
- * FolderType.java
+ * VersionState.java
  *
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
@@ -17,22 +17,23 @@ package org.docma.plugin;
  *
  * @author MP
  */
-public class FolderType 
+public class VersionState 
 {
-    public static final FolderType GENERAL = new FolderType("GENERAL_FOLDER");
-    public static final FolderType IMAGE = new FolderType("IMAGE_FOLDER");
-    
-    private final String folder_type;
+    public static final VersionState DRAFT = new VersionState("DRAFT");
+    public static final VersionState RELEASED = new VersionState("RELEASED");
+    public static final VersionState TRANSLATION_PENDING = new VersionState("TRANSLATION_PENDING");
 
-    FolderType(String folder_type) 
+    private final String version_state;
+
+    VersionState(String version_state) 
     {
-        this.folder_type = folder_type;
+        this.version_state = version_state;
     }
-    
+
     @Override
     public int hashCode() 
     {
-        return (this.folder_type != null) ? this.folder_type.hashCode() : 0;
+        return (this.version_state != null) ? this.version_state.hashCode() : 0;
     }
 
     @Override
@@ -47,18 +48,18 @@ public class FolderType
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final FolderType other = (FolderType) obj;
-        if ((this.folder_type == null) ? (other.folder_type != null) 
-                                       : !this.folder_type.equals(other.folder_type)) {
+        final VersionState other = (VersionState) obj;
+        if ((this.version_state == null) ? (other.version_state != null) 
+                                         : !this.version_state.equals(other.version_state)) {
             return false;
         }
         return true;
     }
-    
+
     @Override
     public String toString() 
     {
-        return (folder_type == null) ? "null" : folder_type;
+        return (version_state == null) ? "null" : version_state;
     }
-    
+
 }

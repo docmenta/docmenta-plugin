@@ -44,6 +44,36 @@ public interface Folder extends Group
      * @see #setName(String)
      */
     String getName() throws DocmaException;
+    
+    /**
+     * Returns the folder name for the given language code.
+     * If the <code>lang_code</code> argument is <code>null</code>,
+     * then the name for the original language is returned.
+     * If no name is assigned, then an empty string is returned.
+     *
+     * <p><em>Retrieving translated attribute values:</em><br>
+     * If the <code>lang_code</code> argument is <em>not</em> <code>null</code>,
+     * then this method returns the name for the translation language
+     * identified by <code>lang_code</code>. If no translated name for the 
+     * language <code>lang_code</code> exists, then <code>null</code> is 
+     * returned.
+     * 
+     * <p>Note that a return value other than <code>null</code> does not  
+     * necessarily mean that the name is semantically translated. This method 
+     * just returns the name that has been stored for the given translation 
+     * language.
+     * For example, it is possible to read the folder name for the original
+     * language, then switch to translation mode and set this value  
+     * as the translated name. In this case the translated name is  
+     * identical to the original name.</p>
+     * 
+     * @param lang_code  the language code of a translation language, 
+     *                   or <code>null</code>
+     * @return      the folder name, or an empty string
+     * @throws DocmaException  if the name cannot be retrieved, for example
+     *                         due to a connection error
+     */
+    String getName(String lang_code) throws DocmaException;
 
     /**
      * Sets the folder name.

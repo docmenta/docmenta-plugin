@@ -20,10 +20,8 @@ package org.docma.plugin;
 public interface PubContent extends Content 
 {
 
-    // String prepareXHTML(String content, Properties props) throws Exception;
-
     /**
-     * Returns the assigned title of the node.
+     * Returns the assigned title.
      * If no title is assigned, then an empty string is returned.
      *
      * <p><em>Translation-mode:</em><br>
@@ -40,6 +38,37 @@ public interface PubContent extends Content
      * @see #getTitleEntityEncoded()
      */
     String getTitle() throws DocmaException;
+
+    /**
+     * Returns the assigned title for the given language code.
+     * If the <code>lang_code</code> argument is <code>null</code>,
+     * then the title for the original language is returned.
+     * If no title for the original language is assigned, then an empty string 
+     * is returned.
+     *
+     * <p><em>Retrieving translated attribute values:</em><br>
+     * If the <code>lang_code</code> argument is <em>not</em> <code>null</code>,
+     * then this method returns the title for the translation language
+     * identified by <code>lang_code</code>. If no translated title for the 
+     * language <code>lang_code</code> exists, then <code>null</code> is 
+     * returned.
+     * 
+     * <p>Note that a return value other than <code>null</code> does not  
+     * necessarily mean that the title is semantically translated. This method 
+     * just returns the title that has been stored for the given translation 
+     * language.
+     * For example, it is possible to read the title for the original
+     * language, then switch to translation mode and set this value  
+     * as the translated title. In this case the translated title is  
+     * identical to the original title.</p>
+     * 
+     * @param lang_code  the language code of a translation language, 
+     *                   or <code>null</code>
+     * @return  the node's title
+     * @throws DocmaException  if the title cannot be retrieved, for example
+     *                         due to a connection error
+     */
+    String getTitle(String lang_code) throws DocmaException;
 
     /**
      * Returns the same value as <code>getTitle()</code>, but with special 
@@ -84,19 +113,6 @@ public interface PubContent extends Content
     void setTitle(String value) throws DocmaException;
 
     /**
-     * Indicates whether a translated title for the language  
-     * <code>lang_code</code> exists.
-     * 
-     * @param lang_code  the language code of the translation language
-     * @return  <code>true</code> if a translation for the given language exists;
-     *          <code>false</code> otherwise
-     * @throws DocmaException  If the translation status cannot be retrieved 
-     *                         (for example, due to a connection error)
-     * @see #getTitle()
-     */
-    boolean isTitleTranslated(String lang_code) throws DocmaException;
-    
-    /**
      * Returns all anchors that exist in the content of this node.
      * An anchor is an XML (XHTML) element that has an <code>id</code> 
      * attribute assigned.
@@ -125,7 +141,7 @@ public interface PubContent extends Content
      *                         for example due to a connection error
      * @see StoreConnection#getNodeByAlias(String).
      */
-    ContentAnchor[] getContentAnchors() throws DocmaException;   // empty array anstatt null
+    ContentAnchor[] getContentAnchors() throws DocmaException;
 
     /**
      * Returns whether the content contains anchors.
@@ -142,20 +158,19 @@ public interface PubContent extends Content
     boolean hasContentAnchors() throws DocmaException;
 
     /**
-     * Returns whether the content includes an anchor with the given   
-     * <code>anchorId</code> value.
-     * Every XML (XHTML) element, that has an <code>id</code> 
-     * attribute, is considered to be an anchor. If an anchor exists
-     * where the value of the <code>id</code> attribute is equal to 
-     * <code>anchorId</code>, then <code>true</code> is returned. 
-     * Otherwise <code>false</code> is returned.
+     * Returns the anchor with the given <code>anchorId</code> value, 
+     * or <code>null</code> if no such anchor exists.
+     * Every XHTML element, that has an <code>id</code> attribute 
+     * assigned is considered to be an anchor. If an element exists, that has 
+     * an <code>id</code> value equal to <code>anchorId</code>, this element 
+     * is returned as anchor.
      * 
      * @param anchorId  the <code>id</code> value to search for
-     * @return  <code>true</code> if the content contains an anchor with the 
-     *          given <code>id</code> value, otherwise <code>false</code>
-     * @throws DocmaException  if the return value cannot be retrieved, 
+     * @return  the anchor with the given <code>id</code> value, 
+     *          or <code>null</code>
+     * @throws DocmaException  if the content cannot be accessed, 
      *                         for example due to a connection error
      */
-    boolean hasContentAnchor(String anchorId) throws DocmaException;
+    ContentAnchor getContentAnchor(String anchorId) throws DocmaException;
 
 }

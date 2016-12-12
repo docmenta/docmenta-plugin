@@ -1,5 +1,5 @@
 /*
- * OutputConfig.java
+ * ExportJob.java
  *
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
@@ -17,12 +17,18 @@ package org.docma.plugin;
  *
  * @author MP
  */
-public interface OutputConfig
+public interface ExportJob 
 {
-    String getId();
-    String getFormat();
-    String getSubformat();
+    final int STATE_QUEUED = 1;
+    final int STATE_RUNNING = 2;
+    final int STATE_CANCELED = 3;
     
-    String getProperty(String propName);
-    
+    int getState();
+    String getUserId();
+    long getCreationTime();
+    String getStoreId();
+    VersionId getVersionId();
+    String getLanguageCode();
+    String getPublicationId();
+    void cancel();
 }

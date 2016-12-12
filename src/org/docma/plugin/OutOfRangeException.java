@@ -39,4 +39,16 @@ public class OutOfRangeException extends DocmaException
     {
         super(msg);
     }
+
+    /**
+     * Constructs an instance of <code>OutOfRangeException</code> with the
+     * specified cause.
+     *
+     * @param cause the cause.
+     */
+    public OutOfRangeException(Throwable cause) 
+    {
+        super(cause);
+    }
+
 }

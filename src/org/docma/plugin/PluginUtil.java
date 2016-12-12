@@ -16,6 +16,7 @@ package org.docma.plugin;
 
 import java.util.*;
 import java.io.*;
+import org.docma.plugin.internals.LabelUtil;
 
 /**
  * This class provides utility methods to be used by Docmenta plug-ins.
@@ -24,7 +25,7 @@ import java.io.*;
  */
 public class PluginUtil
 {
-    private static Map<String, Properties> resourceMap = new Hashtable();  // use Hashtable because it is synchronized!
+    private static final Map<String, Properties> resourceMap = new Hashtable();  // use Hashtable because it is synchronized!
 
     /**
      * Private constructor to avoid the creation of instances. 
@@ -35,33 +36,52 @@ public class PluginUtil
     }
 
     /**
-     * Tries to find a XML properties file for the given class and language and
+     * Returns the label for the given <code>locale</code> and <code>key</code>.
+     * If no localization for the given <code>key</code> exists, 
+     * then <code>key</code> itself is returned.
+     * 
+     * @param locale  the locale for which to retrieve the label
+     * @param key     the label identifier
+     * @param args    the arguments to be inserted for placeholders
+     * @return  the localized label 
+     */
+    public static String getLabel(Locale locale, String key, Object[] args) 
+    {
+        return LabelUtil.getLabel(locale, key, args);
+    }
+    
+    /**
+     * Returns the label for the given <code>language</code> and <code>key</code>.
+     * If no localization for the given <code>key</code> exists, 
+     * then <code>key</code> itself is returned.
+     * 
+     * @param languageCode  the ISO 639 language code 
+     * @param key     the label identifier
+     * @param args    the arguments to be inserted for placeholders
+     * @return  the localized label 
+     */
+    public static String getLabel(String languageCode, String key, Object[] args) 
+    {
+        return LabelUtil.getLabel(languageCode, key, args);
+    }
+
+    /**
+     * Tries to find an XML properties file for the given class and language and
      * returns the specified property value. This utility method can be used to
-     * load localized strings for a given class from a XML properties file.
+     * load localized strings for a given class from an XML properties file.
      * <p>
-     * The path of the properties file is derived from 
-     * <tt>cls</tt> and <tt>languageCode</tt> as follows:
+     * The path of the properties file is derived from the arguments
+     * <tt>cls</tt> and <tt>languageCode</tt> by following Java expression:
      * </p>
      * <pre>
-     *   path = cls.getName().replace('.', '/') + "_" + languageCode + ".xml";
+     *   cls.getName().replace('.', '/') + "_" + languageCode + ".xml";
      * </pre>
      * <p>
      * For example, if the class-name is <tt>"org.docma.example.MyClass"</tt> and
      * the language code is <tt>"en"</tt>, then
      * the derived path is <tt>"org/docma/example/MyClass_en.xml"</tt>.
-     * The properties file is then loaded as resource stream using
-     * the <tt>ClassLoader</tt> of <tt>cls</tt>, i.e.:
-     * </p>
-     * <pre>
-     *   cls.getClassLoader().getResourceAsStream(path);
-     * </pre>
-     * <p>
-     * If a properties file does not exist for the given language code, then
-     * the language code <tt>"en"</tt> is used as fall-back.
-     * </p>
-     * <p>
-     * Following an example of a XML properties file which contains two properties
-     * with names <tt>name1</tt> and <tt>name2</tt>:
+     * Following an example of a XML properties file which contains two 
+     * properties with names <tt>name1</tt> and <tt>name2</tt>:
      * </p>
      * <pre>
      *     &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -74,6 +94,17 @@ public class PluginUtil
      * <p>
      * For more information on the properties XML-format, see the
      * documentation of the {@link java.util.Properties java.util.Properties} class.
+     * </p>
+     * <p>
+     * The properties file is loaded as resource stream using
+     * the class loader of the <tt>cls</tt> argument, as follows:
+     * </p>
+     * <pre>
+     *   cls.getClassLoader().getResourceAsStream(path);
+     * </pre>
+     * <p>
+     * If a properties file does not exist for the given language code, then
+     * the language code <tt>"en"</tt> is used as fall-back.
      * </p>
      *
      * @param cls The class for which the properties shall be loaded.

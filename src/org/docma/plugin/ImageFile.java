@@ -104,15 +104,15 @@ public interface ImageFile extends FileContent
      * {@link #setFileExtension(String)}<code>(<i>ext</i>)</code>.</p>
      * 
      * <p>Be aware, that changing the alias via the <code>setAlias</code>  
-     * method implicitly changes the filename returned by this method.
-     * If no alias is assigned to this node, then changing the    
-     * image title for the original language via the <code>setTitle</code>   
-     * method implicitly changes the filename returned by this method.</p>
+     * method implicitly changes the filename. On the other hand,
+     * if <em>no</em> alias is assigned to this node, then setting the    
+     * image title through calling <code>setTitle(...)</code> for the 
+     * original language implicitly changes the filename.</p>
      *
      * <p><em>Translation-mode:</em><br>
      * Setting the filename, while the session is in translation-mode, is  
      * <em>not</em> allowed and causes an exception. The filename of translated
-     * content is automatically derived from the original filename. See the 
+     * content is derived from the original filename. See the 
      * documentation of {@link #getFileName()} for details.</p>
      * 
      * <p><em>Operating System specific:</em><br>
@@ -147,13 +147,41 @@ public interface ImageFile extends FileContent
      * language is returned (that is the value that has been assigned in 
      * original-mode).</p>
      *
-     * @return the title of the image or an empty string
+     * @return the title of the image, or an empty string
      * @throws DocmaException  if the title cannot be retrieved, 
      *                         for example due to a connection error
      * @see #setTitle(String)
      * @see #getTitleEntityEncoded()
      */
     String getTitle() throws DocmaException;
+
+    /**
+     * Returns the assigned image title for the given language.
+     * If the <code>lang_code</code> argument is <code>null</code>,
+     * then the title for the original language is returned.
+     * If no title has been assigned, an empty string is returned.
+     *
+     * <p><em>Retrieving translated attribute values:</em><br>
+     * If the <code>lang_code</code> argument is <em>not</em> <code>null</code>,
+     * then this method returns the image title for the translation language
+     * identified by <code>lang_code</code>. If no translated title for the 
+     * language <code>lang_code</code> exists, then <code>null</code> is 
+     * returned.
+     * <p>Note that a non-<code>null</code> value does not necessarily mean, 
+     * that the title is semantically translated. This method just returns 
+     * the value that has been stored for the given translation language.
+     * For example, it is possible to read the image title for the original
+     * language, then switch to translation mode and set this value  
+     * as the translated title. In this case the translated title is  
+     * identical to the original title.</p>
+     * 
+     * @param lang_code  the language code of a translation language, 
+     *                   or <code>null</code>
+     * @return      the title of the image, or an empty string
+     * @throws DocmaException  if the title cannot be retrieved, for example
+     *                         due to a connection error
+     */
+    String getTitle(String lang_code) throws DocmaException;
 
     /**
      * Returns the same value as <code>getTitle()</code>, but with special 
@@ -207,13 +235,17 @@ public interface ImageFile extends FileContent
     void setTitle(String value) throws DocmaException;
 
     /**
-     * Returns this image in a different format and/or rescaled as defined for 
-     * the given rendition name. For example, this method can be used to  
-     * retrieve thumbnail renditions of the image. The rendition name has to be   
-     * one of the values returned by the
-     * {@link StoreConnection#listImageRenditionNames()} method.
-     * The format and scale of the returned image can be retrieved by calling 
-     * the {@link StoreConnection#getImageRenditionInfo()} method.
+     * Returns this image in a different format and/or rescaled. 
+     * For example, this method can be used to retrieve thumbnail renditions 
+     * of an image. 
+     * The format and size of the returned image is defined by the supplied 
+     * rendition name. 
+     * The rendition name has to be one of the values returned by
+     * the {@link StoreConnection#listImageRenditionNames()} method.
+     * The format and size of a rendition can be retrieved by calling
+     * the {@link StoreConnection#getImageRenditionInfo(String)} method.
+     * If a rendition with the given name does not exist, then <code>null</code>
+     * is returned.
      *
      * @param renditionName  the rendition name
      * @return  the image rendition for the given rendition name

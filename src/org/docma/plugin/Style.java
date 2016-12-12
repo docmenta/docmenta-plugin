@@ -19,17 +19,59 @@ package org.docma.plugin;
  */
 public interface Style 
 {
+    /**
+     * Returns the style identifier.
+     * The style identifier has to start with a letter.
+     * Following characters can be letters, digits or underscore (_).
+     * If the style identifier includes a dash character (-), then the part
+     * before the dash character is called the <em>base-identifier</em>.  
+     * The part after the dash character is called the <em>variant name</em>.
+     * 
+     * @return  the style identifier
+     * @see #getBaseId() 
+     * @see #getVariantName() 
+     */
     String getId();
+
+    /**
+     * Returns the style's base-identifier.
+     * If the style identifier does not contain a dash character (-), then
+     * this method returns the same value as the {@link #getId() } method.
+     * 
+     * @return  the base identifier.
+     */    
     String getBaseId();
-    String getVariantId();
-    String getName();
+
+    /**
+     * The variant name.
+     * 
+     * @return  the variant name
+     */    
+    String getVariantName();
+    
+    /**
+     * Returns the style title. 
+     * 
+     * @return  a descriptive style name
+     */
+    String getTitle();
+    
+    /**
+     * Sets the style title.
+     * 
+     * @param styleTitle  a descriptive style name
+     */
+    void setTitle(String styleTitle);
     
     boolean isInlineStyle();
     boolean isBlockStyle();
     boolean isInternalStyle();
     boolean isVariant();
+    
     boolean isHidden();
+    void setHidden(boolean hidden);
     
     String getCSS();
-    
+    void setCSS(String styleCSS);
+
 }

@@ -26,10 +26,11 @@ public interface ContentAppHandler
 {
     void initialize(File webBasePath, String relativeAppPath, Properties props) throws Exception;
     String getApplicationId();
-    String getApplicationName();
+    String getApplicationName(String languageCode);
     String[] getSupportedEditExtensions();
     String[] getSupportedViewExtensions();
-    String getViewURL(WebUserSession webSess, String nodeId);
+    String getPreviewURL(WebUserSession webSess, String nodeId);
     void openEditor(WebUserSession webSess, String nodeId) throws Exception;
+    void openViewer(WebUserSession webSess, String nodeId) throws Exception;
     void setCharEntities(CharEntity[] entities);
 }

@@ -34,9 +34,7 @@ public class MessageType
     @Override
     public int hashCode() 
     {
-        int hash = 5;
-        hash = 97 * hash + (this.message_type != null ? this.message_type.hashCode() : 0);
-        return hash;
+        return (this.message_type != null) ? this.message_type.hashCode() : 0;
     }
 
     @Override
@@ -52,8 +50,8 @@ public class MessageType
             return false;
         }
         final MessageType other = (MessageType) obj;
-        if ((this.message_type == null) ? (other.message_type != null) : 
-                                          !this.message_type.equals(other.message_type)) {
+        if ((this.message_type == null) ? (other.message_type != null) 
+                                        : !this.message_type.equals(other.message_type)) {
             return false;
         }
         return true;

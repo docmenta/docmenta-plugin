@@ -1,5 +1,5 @@
 /*
- * OutputConfig.java
+ * LogEntry.java
  *
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
@@ -17,12 +17,11 @@ package org.docma.plugin;
  *
  * @author MP
  */
-public interface OutputConfig
+public interface LogEntry 
 {
-    String getId();
-    String getFormat();
-    String getSubformat();
-    
-    String getProperty(String propName);
-    
+    String   getMessage();
+    boolean  isError();
+    boolean  isWarning();
+    boolean  isInfo();
+    long     getTimestamp();    
 }

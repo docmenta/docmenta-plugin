@@ -139,65 +139,19 @@ public interface Group extends Node
     int getChildPos(Node child) throws DocmaException;
 
     /**
-     * Removes the child-node at the given position. The <code>index</code>
-     * argument has to be equal or greater than 0, and less than the value   
-     * returned by {@link #getChildCount()}.
-     *
-     * <p>This method is has the same effect as the invocation  
-     * <code>removeChildren(index, index)</code>.</p>
+     * Removes the given child nodes. If one or more of the given nodes is
+     * not a child of this node, then an exception is thrown.
      *
      * <p><em>Translation-mode:</em><br>
      * Removing nodes, while the session is in translation-mode, is not  
      * allowed and causes an exception.</p>
      *
-     * @param index  the position of the node to be removed
-     * @throws OutOfRangeException  if <code>index</code> is out of range
-     * @throws DocmaException  if removal of the node is not possible
+     * @param nodes  the nodes to be removed
+     * @throws DocmaException  if removal of the nodes is not possible
      *                         (for example, due to access rights or a 
      *                         connection error)
      */
-    void removeChild(int index) throws DocmaException;
-    
-    /**
-     * Removes the given child node. If the <code>nd</code> argument is no child 
-     * of this node, then the child-list is unmodified and <code>false</code>
-     * is returned. Otherwise <code>true</code> is returned.
-     *
-     * <p><em>Translation-mode:</em><br>
-     * Removing nodes, while the session is in translation-mode, is not  
-     * allowed and causes an exception.</p>
-     *
-     * @param nd  the node to be removed
-     * @return <code>true</code> if <code>nd</code> was a child of this node;
-     *         <code>false</code> otherwise
-     * @throws DocmaException  if removal of the node is not possible
-     *                         (for example, due to access rights or a 
-     *                         connection error)
-     */
-    boolean removeChild(Node nd) throws DocmaException;
-
-    /**
-     * Removes the child-nodes starting at position <code>firstIndex</code> to 
-     * position <code>lastIndex</code> (inclusive).
-     * The <code>firstIndex</code> and <code>lastIndex</code> arguments have 
-     * to be equal or greater than 0, and less than the value   
-     * returned by {@link #getChildCount()}. Furthermore,
-     * <code>lastIndex</code> has to be equal or greater than 
-     * <code>firstIndex</code>.
-     *
-     * <p><em>Translation-mode:</em><br>
-     * Removing nodes, while the session is in translation-mode, is not  
-     * allowed and causes an exception.</p>
-     *
-     * @param firstIndex  the position of the first node to be removed
-     * @param lastIndex   the position of the last node to be removed
-     * @throws OutOfRangeException  if <code>firstIndex</code> or 
-     *                              <code>lastIndex</code> is out of range
-     * @throws DocmaException  if removal of the nodes is not possible for some
-     *                         other reason (for example, due to access rights  
-     *                         or a connection error)
-     */
-    void removeChildren(int firstIndex, int lastIndex) throws DocmaException;
+    void removeChildren(Node... nodes) throws DocmaException;
 
     /**
      * Adds the given nodes at the end of the child-list.
@@ -291,7 +245,7 @@ public interface Group extends Node
      *                         possible (for example, due to access rights or
      *                         a connection error)
      */ 
-    void insertChildren(Node refNode, Node... nds) throws DocmaException;
+    void insertChildrenBefore(Node refNode, Node... nds) throws DocmaException;
 
     /**
      * Deletes this node and all child-nodes recursively.
@@ -317,6 +271,49 @@ public interface Group extends Node
     //************************************************************
 
     // public void deleteContentRecursive()
+
+    /*
+     * Removes the child-node at the given position. The <code>index</code>
+     * argument has to be equal or greater than 0, and less than the value   
+     * returned by {@link #getChildCount()}.
+     *
+     * <p>This method is has the same effect as the invocation  
+     * <code>removeChildren(index, index)</code>.</p>
+     *
+     * <p><em>Translation-mode:</em><br>
+     * Removing nodes, while the session is in translation-mode, is not  
+     * allowed and causes an exception.</p>
+     *
+     * @param index  the position of the node to be removed
+     * @throws OutOfRangeException  if <code>index</code> is out of range
+     * @throws DocmaException  if removal of the node is not possible
+     *                         (for example, due to access rights or a 
+     *                         connection error)
+     */
+    // void removeChild(int index) throws DocmaException;
+
+    /*
+     * Removes the child-nodes starting at position <code>firstIndex</code> to 
+     * position <code>lastIndex</code> (inclusive).
+     * The <code>firstIndex</code> and <code>lastIndex</code> arguments have 
+     * to be equal or greater than 0, and less than the value   
+     * returned by {@link #getChildCount()}. Furthermore,
+     * <code>lastIndex</code> has to be equal or greater than 
+     * <code>firstIndex</code>.
+     *
+     * <p><em>Translation-mode:</em><br>
+     * Removing nodes, while the session is in translation-mode, is not  
+     * allowed and causes an exception.</p>
+     *
+     * @param firstIndex  the position of the first node to be removed
+     * @param lastIndex   the position of the last node to be removed
+     * @throws OutOfRangeException  if <code>firstIndex</code> or 
+     *                              <code>lastIndex</code> is out of range
+     * @throws DocmaException  if removal of the nodes is not possible for some
+     *                         other reason (for example, due to access rights  
+     *                         or a connection error)
+     */
+    // void removeChildren(int firstIndex, int lastIndex) throws DocmaException;
 
     /*
      * Returns the position of the first node that implements the 
