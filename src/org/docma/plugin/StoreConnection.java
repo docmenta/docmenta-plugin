@@ -15,6 +15,7 @@ package org.docma.plugin;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -44,6 +45,14 @@ public interface StoreConnection
      */     
     UserSession getUserSession();
 
+    /**
+     * Closes this connection.
+     * 
+     * @throws DocmaException   if closing fails, or if an error occurs during 
+     *                          closing of the connection
+     */
+    void close() throws DocmaException;
+    
     /**
      * Indicates whether this connection is closed.
      * 
@@ -1033,6 +1042,7 @@ public interface StoreConnection
     
     ImageRenditionInfo getImageRenditionInfo(String renditionName) throws DocmaException;
     
-    String prepareXHTML(String content, Properties props) throws DocmaException;
+    LogEntries prepareHTMLForSave(StringBuilder content, String nodeId, Map<Object, Object> props) throws DocmaException;
     
+    LogEntries consistencyCheck(String nodeId, boolean recursive, boolean autoCorrect, Map<Object, Object> props) throws DocmaException;
 }

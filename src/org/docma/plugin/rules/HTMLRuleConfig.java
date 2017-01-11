@@ -13,6 +13,8 @@
  */
 package org.docma.plugin.rules;
 
+import org.docma.plugin.LogLevel;
+
 /**
  *
  * @author MP
@@ -21,4 +23,5 @@ public interface HTMLRuleConfig
 {
     String getRuleId();
     String[] getArguments();
+    LogLevel getLogLevel(String checkId);
 }

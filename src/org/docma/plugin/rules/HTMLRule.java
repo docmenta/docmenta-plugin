@@ -13,6 +13,8 @@
  */
 package org.docma.plugin.rules;
 
+import org.docma.plugin.LogLevel;
+
 /**
  * This interface defines the functionality of a Docmenta <em>HTML rule</em>. 
  * To create a new HTML rule, a new class that implements this interface
@@ -27,10 +29,10 @@ package org.docma.plugin.rules;
 public interface HTMLRule 
 {
     /**
-     * Returns a human-readable sentence describing the
-     * functionality of this HTML rule.
+     * Returns a single-line sentence describing the provided
+     * functionality of this rule.
      * This has to be plain text <em>without</em> markup.
-     * For example, the returned text is displayed in the user interface.
+     * The text is intended to be displayed in the user interface.
      * Note that the application is allowed to cut-off text that
      * exceeds the length of 80 characters.
      * <p>
@@ -62,7 +64,7 @@ public interface HTMLRule
      * for an example properties file.
      * </p>
      *
-     * @param languageCode The language of the user interface.
+     * @param languageCode  the language of the user interface.
      * @return  sentence describing the functionality of this HTML rule.
      */
     String getShortInfo(String languageCode);
@@ -108,7 +110,7 @@ public interface HTMLRule
      * for an example properties file.
      * </p>
      *
-     * @param languageCode The language of the user interface.
+     * @param languageCode  the language of the user interface.
      * @return  a complete usage description of this HTML rule.
      */
     String getLongInfo(String languageCode);
@@ -126,85 +128,69 @@ public interface HTMLRule
     void configure(HTMLRuleConfig conf);
 
     /**
-     * Applies the rule to the HTML string passed in the <code>content</code> 
-     * argument.
-     * An HTML rule can be any kind of operation applied to the content, that
-     * checks the consistency of the HTML. Two modes are distinguished: 
+     * Applies the checks that are provided by this rule to the 
+     * <code>content</code> argument.
+     * A check can be any kind of operation applied to the content, that
+     * checks the consistency of the HTML. If a check supports auto-correction
+     * then the supplied content may also be modified.
      * <p>
-     * If the <code>autoCorrect</code> argument is <code>true</code>, 
-     * then this method tries to correct the provided content, and returns the 
-     * corrected content as the method's result value. 
-     * If no auto-correction is possible at all for the passed content, then the  
-     * content is returned unchanged (in other words, the method's result   
-     * value is equal to the value passed in the <code>content</code> argument).
-     * In any case, log messages may be written to the logger provided in the 
-     * <code>context</code> argument (see {@link HTMLRuleContext#getLogger() }).
-     * </p>
-     * <p>
-     * On the other hand, if the <code>autoCorrect</code> argument is 
-     * <code>false</code>, then this method just checks whether the provided
-     * content is conforming to the rule. In this case only log messages are 
-     * written. The method's result value has no meaning and can be any value, 
-     * for example <code>null</code>.
-     * That means, if the <code>autoCorrect</code> argument is 
-     * <code>false</code>, then the content remains unchanged, independant from
-     * the method's result value.
+     * Log messages may be written by calling one of the log 
+     * methods provided by the <code>context</code> argument.
      * </p>
      * 
      * @param content  the HTML content 
-     * @param autoCorrect  whether auto-correction shall be applied 
-     *                     (<code>true</code>) or not (<code>false</code>)
      * @param context  the context information
-     * @return  if <code>autoCorrect</code> is <code>true</code> the 
-     *          auto-corrected content; otherwise undefined
      */
-    String apply(String content, boolean autoCorrect, HTMLRuleContext context);
+    void apply(StringBuilder content, HTMLRuleContext context);
+
+    /**
+     * Returns the list of supported check identifiers 
+     * 
+     * @return supported check identifiers
+     */
+    String[] getCheckIds();
+
+    /**
+     * Returns a single-line description of the check.
+     * This has to be plain text <em>without</em> markup.
+     * The text is intended to be displayed in the user interface.
+     * Note that the application is allowed to cut-off text that
+     * exceeds the length of 80 characters.
+     * 
+     * @param checkId  the check identifier
+     * @param languageCode  the language of the user interface.
+     * @return  a short check description
+     */
+    String getCheckTitle(String checkId, String languageCode);
     
     /**
-     * Indicates whether this rule supports auto-correction or not.
+     * Indicates whether the check identified by <code>checkId</code> supports 
+     * auto-correction or not.
      * The returned value may only depend on the rule configuration.
      * That means, the method always returns the same value, as long as the
      * configuration is not changed by an invocation of the 
      * {@link #configure(HTMLRuleConfig) } method.
-     * <p>
-     * Note that the value returned by this method determines how the framework 
-     * invokes the {@link #apply(java.lang.String, boolean, HTMLRuleContext)} 
-     * method. As long as this method returns <code>false</code>, the 
-     * <code>apply</code> method is called with its <code>autoCorrect</code> 
-     * parameter set to <code>false</code> only.
-     * On the other hand, as long as this method returns <code>true</code>,  
-     * the <code>apply</code> method may be called with the   
-     * <code>autoCorrect</code> parameter set to <code>false</code> or 
-     * <code>true</code>.
-     * </p>
      * 
-     * @return <code>true</code> if auto-correction is supported;
-     *         <code>false</code> otherwise
+     * @param checkId  the check identifier
+     * @return <code>true</code> if auto-correction is supported by the given 
+     *         check; <code>false</code> otherwise
      */
-    boolean supportsAutoCorrection();
+    boolean supportsAutoCorrection(String checkId);
     
     /**
-     * Indicates the maximum severity of the log messages that this rule 
-     * creates. The returned value may be displayed as a hint to the user,  
-     * but does not change functionality of this rule.
+     * Indicates the default log level for the check identified by 
+     * <code>checkId</code>.
+     * The returned value may be displayed as a hint to the user.
      * <p>
-     * For example, if a rule just writes log messages of type <code>INFO</code>
-     * and <code>WARNING</code>, then the returned value should be 
-     * <code>RuleSeverity.WARNING</code>. 
-     * If the same rule also writes messages of type  
-     * <code>ERROR</code>, then the returned value should be 
-     * <code>RuleSeverity.ERROR</code>.
-     * </p>
-     * <p>
-     * The returned value may only depend on the rule configuration and 
-     * must <em>not</em> be <code>null</code>.
-     * That means, the method always returns the same severity, as long as the
+     * The returned value may only depend on the rule configuration.
+     * That means, the method always returns the same log level, as long as the 
      * configuration is not changed by an invocation of the 
      * {@link #configure(HTMLRuleConfig) } method.
      * </p>
      * 
-     * @return  the maximum severity of the log messages 
+     * @param checkId  the check identifier
+     * @return  the default log level for the given check
      */
-    RuleSeverity getMaxSeverity();
+    LogLevel getDefaultLogLevel(String checkId);
 
 }

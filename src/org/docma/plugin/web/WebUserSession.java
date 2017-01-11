@@ -31,6 +31,7 @@ public interface WebUserSession extends UserSession
     void addAdminTab(WebPluginContext ctx, String tabId, String title, int pos, String zulPath);
     void addPublishingTab(WebPluginContext ctx, String tabId, String title, int pos, String zulPath);
     void addUserTab(WebPluginContext ctx, String tabId, String title, int pos, String zulPath);
+    Object getTabComponent(String tabId, String componentId);
     
     void addMenuItem(WebPluginContext ctx, String parentMenuId, String itemId, 
                      String label, String imageUrl, String neighbourId, boolean insertBefore);

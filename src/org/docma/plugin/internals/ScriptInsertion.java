@@ -1,5 +1,5 @@
 /*
- * Logger.java
+ * ScriptInsertion.java
  * 
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
@@ -11,15 +11,19 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Docmenta.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.docma.plugin;
+package org.docma.plugin.internals;
+
+import java.util.Set;
+import org.docma.plugin.web.WebUserSession;
 
 /**
  *
  * @author MP
  */
-public interface Logger 
+public interface ScriptInsertion 
 {
-    void info(String msg, Object... args);
-    void warning(String msg, Object... args);
-    void error(String msg, Object... args);
+    String getPluginId();
+    String getFeature();
+    Set<String> getFileExtensions(WebUserSession userSess);
+    String getInsertion(WebUserSession userSess, String ext, String position);
 }

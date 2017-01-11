@@ -26,7 +26,7 @@ public interface User
     String getName();
     
     String getProperty(String name);
-    void setProperty(String name, String value) throws Exception;
-    void setProperties(String[] names, String[] values) throws Exception;
+    void setProperty(String name, String value) throws DocmaException;
+    void setProperties(String[] names, String[] values) throws DocmaException;
 
 }

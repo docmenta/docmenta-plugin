@@ -13,7 +13,7 @@
  */
 package org.docma.plugin.rules;
 
-import org.docma.plugin.UserSession;
+import org.docma.plugin.StoreConnection;
 
 /**
  *
@@ -32,17 +32,41 @@ public interface HTMLRuleContext
     String getNodeId();
 
     /**
-     * Returns the logger to be used for writing log messages.
      * 
-     * @return  the logger instance
-     */    
-    HTMLRuleLogger getLogger();
+     * @param checkId
+     * @return 
+     */
+    boolean isEnabled(String checkId);
     
     /**
-     * Returns the current user session.
      * 
-     * @return  the session of the current user
+     * @param checkId
+     * @return 
      */
-    UserSession getUserSession();
+    boolean isAutoCorrect(String checkId);
+
+    /**
+     * 
+     * @param checkId
+     * @param msg
+     * @param args 
+     */
+    void log(String checkId, String msg, Object... args);
+    
+    /**
+     * 
+     * @param checkId
+     * @param contentPosition
+     * @param msg
+     * @param args 
+     */
+    void log(String checkId, int contentPosition, String msg, Object... args);
+    
+    /**
+     * Returns the current store connection.
+     * 
+     * @return  the current store connection
+     */
+    StoreConnection getStoreConnection();
     
 }

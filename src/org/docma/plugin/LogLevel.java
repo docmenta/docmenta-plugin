@@ -1,5 +1,5 @@
 /*
- * Logger.java
+ * LogLevel.java
  * 
  *  Copyright (C) 2016  Manfred Paula, http://www.docmenta.org
  *   
@@ -17,9 +17,7 @@ package org.docma.plugin;
  *
  * @author MP
  */
-public interface Logger 
+public enum LogLevel 
 {
-    void info(String msg, Object... args);
-    void warning(String msg, Object... args);
-    void error(String msg, Object... args);
+    INFO, WARNING, ERROR;
 }

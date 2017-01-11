@@ -107,6 +107,24 @@ public interface ApplicationContext
      *                          or numeric representation
      */
     CharEntity createCharEntity(String sym, String num, String desc, boolean sel) throws DocmaException;
+
+    /**
+     * Returns the file extensions that have been configured as text-file 
+     * extensions in the application configuration.
+     *
+     * @return  the configured text-file extensions 
+     * @throws DocmaException  if the extensions cannot be retrieved,
+     *                         for example due to a connection error
+     */
+    String[] getTextFileExtensions() throws DocmaException;
+
+    String[] getAutoFormatClassNames() throws DocmaException;
+    void registerAutoFormatClasses(String... clsNames) throws DocmaException;
+    void unregisterAutoFormatClasses(String... clsNames) throws DocmaException;
+
+    String[] getRuleClassNames() throws DocmaException;
+    void registerRuleClasses(String... clsNames) throws DocmaException;
+    void unregisterRuleClasses(String... clsNames) throws DocmaException;
     
     boolean hasObject(String objectName);
     Object getObject(String objectName);

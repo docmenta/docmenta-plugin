@@ -136,8 +136,6 @@ public interface UserSession
      * @return  the created store connection
      */
     StoreConnection createTempStoreConnection(String storeId, VersionId verId) throws DocmaException;
-    
-    void closeTempStoreConnection(StoreConnection conn) throws DocmaException;
 
     /**
      * Returns the version identifier of the latest version for the given store.
