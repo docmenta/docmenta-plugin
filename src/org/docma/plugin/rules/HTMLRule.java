@@ -119,14 +119,57 @@ public interface HTMLRule
      * Sets the configuration for this HTML rule.
      * This method is called by the framework to provide the configuration data
      * that has been set by the user (for example, by the administrator).
-     * The framework assures that this method is called at least once, before
-     * the first invocation of the 
-     * {@link #apply(java.lang.String, boolean, HTMLRuleContext) } method.
+     * The framework assures that this method is called at least once before
+     * the first invocation of the {@link #startBatch() } method.
      * 
      * @param conf   the configuration data
      */
     void configure(HTMLRuleConfig conf);
 
+    /**
+     * Indicates the start of applying this rule to one or more nodes.
+     * This method is invoked by the framework just before one or more 
+     * invocations of the
+     * {@link #apply(java.lang.StringBuilder, boolean, HTMLRuleContext) } 
+     * method. This method may prepare or cache resources 
+     * that are used in the <code>apply</code> method.
+     * <p>
+     * An invocation of this method indicates the start of a user action, for 
+     * example the start of checking all nodes in a subtree of the 
+     * documentation. 
+     * The end of the user action is indicated by an invocation of the 
+     * {@link #finishBatch()} method. As long as the user action is running,
+     * the instance is reserved, which means all methods
+     * from <code>startBatch</code> up to <code>finishBatch</code> are 
+     * executed sequentially by the same thread. 
+     * However, several user actions may run in parallel. In this case a  
+     * separate rule instance is created for each concurrent user action.
+     * </p>
+     * 
+     * @see #finishBatch()
+     */
+    void startBatch();
+    
+    /**
+     * Indicates the end of applying the rule to one or more nodes.
+     * This method is invoked by the framework just after one or more 
+     * subsuequent invocations of the
+     * {@link #apply(java.lang.StringBuilder, boolean, HTMLRuleContext) } 
+     * method. For each invocation of {@link #startBatch() } there is 
+     * exactly one subsequent invocation of this method.
+     * Generally, this method indicates the end of a user action, for example
+     * the end of checking all nodes in a subtree of the documentation. 
+     * <p>
+     * This method allows to clear ressources that have been cached 
+     * in previous invocations of the 
+     * {@link #apply(java.lang.StringBuilder, boolean, HTMLRuleContext) } 
+     * method.
+     * </p>
+     * 
+     * @see #startBatch()
+     */
+    void finishBatch();
+    
     /**
      * Applies the checks that are provided by this rule to the 
      * <code>content</code> argument.
@@ -140,6 +183,7 @@ public interface HTMLRule
      * 
      * @param content  the HTML content 
      * @param context  the context information
+     * @see #startBatch()
      */
     void apply(StringBuilder content, HTMLRuleContext context);
 

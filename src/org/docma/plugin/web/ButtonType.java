@@ -19,6 +19,7 @@ package org.docma.plugin.web;
  */
 public final class ButtonType 
 {
+    public static final ButtonType USER_DEFINED = new ButtonType("USER_DEFINED");
     public static final ButtonType ABORT = new ButtonType("ABORT");
     public static final ButtonType CANCEL = new ButtonType("CANCEL");
     public static final ButtonType CLOSE = new ButtonType("CLOSE");
