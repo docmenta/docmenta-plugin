@@ -13,6 +13,7 @@
  */
 package org.docma.plugin.rules;
 
+import java.util.Locale;
 import org.docma.plugin.LogLevel;
 import org.docma.plugin.StoreConnection;
 
@@ -169,5 +170,13 @@ public interface HTMLRuleContext
      * @return  the current store connection
      */
     StoreConnection getStoreConnection();
-    
+
+    /**
+     * Returns the current user interface locale.
+     * This is equivalent to the expression 
+     * <code>getStoreConnection().getUserSession().getCurrentLocale()</code>.
+     * 
+     * @return  the current UI locale
+     */
+    Locale getUILocale();
 }

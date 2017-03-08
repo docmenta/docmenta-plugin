@@ -130,7 +130,7 @@ public interface HTMLRule
      * Indicates the start of applying this rule to one or more nodes.
      * This method is invoked by the framework just before one or more 
      * invocations of the
-     * {@link #apply(java.lang.StringBuilder, boolean, HTMLRuleContext) } 
+     * {@link #apply(java.lang.String, boolean, HTMLRuleContext) } 
      * method. This method may prepare or cache resources 
      * that are used in the <code>apply</code> method.
      * <p>
@@ -154,16 +154,14 @@ public interface HTMLRule
      * Indicates the end of applying the rule to one or more nodes.
      * This method is invoked by the framework just after one or more 
      * subsuequent invocations of the
-     * {@link #apply(java.lang.StringBuilder, boolean, HTMLRuleContext) } 
+     * {@link #apply(java.lang.String, boolean, HTMLRuleContext) } 
      * method. For each invocation of {@link #startBatch() } there is 
      * exactly one subsequent invocation of this method.
      * Generally, this method indicates the end of a user action, for example
      * the end of checking all nodes in a subtree of the documentation. 
      * <p>
      * This method allows to clear ressources that have been cached 
-     * in previous invocations of the 
-     * {@link #apply(java.lang.StringBuilder, boolean, HTMLRuleContext) } 
-     * method.
+     * in previous invocations of the <code>apply</code> method.
      * </p>
      * 
      * @see #startBatch()
@@ -171,26 +169,32 @@ public interface HTMLRule
     void finishBatch();
     
     /**
-     * Applies the checks that are provided by this rule to the 
+     * Applies the checks implemented by this rule to the 
      * <code>content</code> argument.
-     * A check can be any kind of operation applied to the content, that
-     * checks the consistency of the HTML. If a check supports auto-correction
-     * then the supplied content may also be modified.
-     * <p>
-     * Log messages may be written by calling one of the log 
-     * methods provided by the <code>context</code> argument.
-     * </p>
+     * Usually, a check is an operation that checks the consistency of the HTML. 
+     * An implementation of this method may create log messages by calling
+     * one of the log methods provided by the <code>context</code> argument.
+     * If a check supports auto-correction then the passed content may also 
+     * be modified. 
      * 
      * @param content  the HTML content 
      * @param context  the context information
+     * @return  the modified content; <code>null</code> if the content is unmodified
      * @see #startBatch()
      */
-    void apply(StringBuilder content, HTMLRuleContext context);
+    String apply(String content, HTMLRuleContext context);
 
     /**
-     * Returns the list of supported check identifiers 
+     * Returns the list of checks that are implemented by this rule. 
+     * <p>
+     * The returned check identifiers may only depend on the rule configuration.
+     * That means, according to the contract of this interface, 
+     * the method always has to return the same identifiers, as long as the
+     * configuration is not changed by an invocation of the 
+     * {@link #configure(HTMLRuleConfig) } method.
+     * </p>
      * 
-     * @return supported check identifiers
+     * @return  check identifiers
      */
     String[] getCheckIds();
 
@@ -210,10 +214,13 @@ public interface HTMLRule
     /**
      * Indicates whether the check identified by <code>checkId</code> supports 
      * auto-correction or not.
+     * <p>
      * The returned value may only depend on the rule configuration.
-     * That means, the method always returns the same value, as long as the
-     * configuration is not changed by an invocation of the 
-     * {@link #configure(HTMLRuleConfig) } method.
+     * That means, according to the contract of this interface,
+     * the method always has to return the same value for a given check 
+     * identifier, as long as the configuration is not changed by an invocation 
+     * of the {@link #configure(HTMLRuleConfig) } method.
+     * </p>
      * 
      * @param checkId  the check identifier
      * @return <code>true</code> if auto-correction is supported by the given 
@@ -227,9 +234,10 @@ public interface HTMLRule
      * The returned value may be displayed as a hint to the user.
      * <p>
      * The returned value may only depend on the rule configuration.
-     * That means, the method always returns the same log level, as long as the 
-     * configuration is not changed by an invocation of the 
-     * {@link #configure(HTMLRuleConfig) } method.
+     * That means, according to the contract of this interface,
+     * the method always has to return the same log level for a given check 
+     * identifier, as long as the configuration is not changed by an invocation 
+     * of the {@link #configure(HTMLRuleConfig) } method.
      * </p>
      * 
      * @param checkId  the check identifier

@@ -20,8 +20,11 @@ package org.docma.plugin;
 public interface LogEntry 
 {
     String   getMessage();
-    boolean  isError();
-    boolean  isWarning();
-    boolean  isInfo();
+    LogLevel getLevel();
+    // boolean  isError();
+    // boolean  isWarning();
+    // boolean  isInfo();
     long     getTimestamp();    
+    String   getGenerator();
+    String   getType();
 }

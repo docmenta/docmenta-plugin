@@ -16,6 +16,7 @@ package org.docma.plugin;
 
 import java.util.*;
 import java.io.*;
+import java.text.MessageFormat;
 import org.docma.plugin.internals.LabelUtil;
 
 /**
@@ -26,6 +27,7 @@ import org.docma.plugin.internals.LabelUtil;
 public class PluginUtil
 {
     private static final Map<String, Properties> resourceMap = new Hashtable();  // use Hashtable because it is synchronized!
+    private static final Map<String, MessageFormat> msgFormatMap = new Hashtable();
 
     /**
      * Private constructor to avoid the creation of instances. 
@@ -63,6 +65,11 @@ public class PluginUtil
     public static String getLabel(String languageCode, String key, Object[] args) 
     {
         return LabelUtil.getLabel(languageCode, key, args);
+    }
+
+    public static String getResourceString(Class cls, String languageCode, String name)
+    {
+        return getResourceString(cls, languageCode, name, null);
     }
 
     /**
@@ -110,10 +117,13 @@ public class PluginUtil
      * @param cls The class for which the properties shall be loaded.
      * @param languageCode The language code.
      * @param name The property name.
+     * @param args The placeholder values or <code>null</code>.
      * @return The property value or an empty string if the property is not found.
      */
-    public static String getResourceString(Class cls, String languageCode, String name)
+    public static String getResourceString(Class cls, String languageCode, String name, Object[] args)
     {
+        languageCode = (languageCode == null) ? "en" : languageCode.toLowerCase();
+        
         String res_name = cls.getName().replace('.', '/') + "_" + languageCode + ".xml";
         Properties props = resourceMap.get(res_name);
         if (props == null) {
@@ -136,7 +146,18 @@ public class PluginUtil
         if ((props == null) && !languageCode.equals("en")) {
             return getResourceString(cls, "en", name);
         }
-        return (props != null) ? props.getProperty(name, "") : "";
+        
+        String val = (props != null) ? props.getProperty(name, "") : "";
+        if ((args != null) && (args.length > 0)) {
+            String key = languageCode + "::" + val;
+            MessageFormat mf = msgFormatMap.get(key);
+            if (mf == null) {
+                mf = new MessageFormat(val, new Locale(languageCode));
+                msgFormatMap.put(key, mf);
+            }
+            val = mf.format(args);
+        }
+        return val;
     }
 
 
