@@ -116,6 +116,67 @@ public interface HTMLRule
     String getLongInfo(String languageCode);
 
     /**
+     * Returns the list of checks that are implemented by this rule. 
+     * <p>
+     * The returned check identifiers may only depend on the rule configuration.
+     * That means, according to the contract of this interface, 
+     * the method always has to return the same identifiers, as long as the
+     * configuration is not changed by an invocation of the 
+     * {@link #configure(HTMLRuleConfig) } method.
+     * </p>
+     * 
+     * @return  check identifiers
+     */
+    String[] getCheckIds();
+
+    /**
+     * Returns a single-line description of the check.
+     * This has to be plain text <em>without</em> markup.
+     * The text is intended to be displayed in the user interface.
+     * Note that the application is allowed to cut-off text that
+     * exceeds the length of 80 characters.
+     * 
+     * @param checkId  the check identifier
+     * @param languageCode  the language of the user interface.
+     * @return  a short check description
+     */
+    String getCheckTitle(String checkId, String languageCode);
+    
+    /**
+     * Indicates whether the check identified by <code>checkId</code> supports 
+     * auto-correction or not.
+     * <p>
+     * The returned value may only depend on the rule configuration.
+     * That means, according to the contract of this interface,
+     * the method always has to return the same value for a given check 
+     * identifier, as long as the configuration is not changed by an invocation 
+     * of the {@link #configure(HTMLRuleConfig) } method.
+     * </p>
+     * 
+     * @param checkId  the check identifier
+     * @return <code>true</code> if auto-correction is supported by the given 
+     *         check; <code>false</code> otherwise
+     */
+    boolean supportsAutoCorrection(String checkId);
+    
+    /**
+     * Indicates the default log level for the check identified by 
+     * <code>checkId</code>.
+     * The returned value may be displayed as a hint to the user.
+     * <p>
+     * The returned value may only depend on the rule configuration.
+     * That means, according to the contract of this interface,
+     * the method always has to return the same log level for a given check 
+     * identifier, as long as the configuration is not changed by an invocation 
+     * of the {@link #configure(HTMLRuleConfig) } method.
+     * </p>
+     * 
+     * @param checkId  the check identifier
+     * @return  the default log level for the given check
+     */
+    LogLevel getDefaultLogLevel(String checkId);
+
+    /**
      * Sets the configuration for this HTML rule.
      * This method is called by the framework to provide the configuration data
      * that has been set by the user (for example, by the administrator).
@@ -183,66 +244,5 @@ public interface HTMLRule
      * @see #startBatch()
      */
     String apply(String content, HTMLRuleContext context);
-
-    /**
-     * Returns the list of checks that are implemented by this rule. 
-     * <p>
-     * The returned check identifiers may only depend on the rule configuration.
-     * That means, according to the contract of this interface, 
-     * the method always has to return the same identifiers, as long as the
-     * configuration is not changed by an invocation of the 
-     * {@link #configure(HTMLRuleConfig) } method.
-     * </p>
-     * 
-     * @return  check identifiers
-     */
-    String[] getCheckIds();
-
-    /**
-     * Returns a single-line description of the check.
-     * This has to be plain text <em>without</em> markup.
-     * The text is intended to be displayed in the user interface.
-     * Note that the application is allowed to cut-off text that
-     * exceeds the length of 80 characters.
-     * 
-     * @param checkId  the check identifier
-     * @param languageCode  the language of the user interface.
-     * @return  a short check description
-     */
-    String getCheckTitle(String checkId, String languageCode);
-    
-    /**
-     * Indicates whether the check identified by <code>checkId</code> supports 
-     * auto-correction or not.
-     * <p>
-     * The returned value may only depend on the rule configuration.
-     * That means, according to the contract of this interface,
-     * the method always has to return the same value for a given check 
-     * identifier, as long as the configuration is not changed by an invocation 
-     * of the {@link #configure(HTMLRuleConfig) } method.
-     * </p>
-     * 
-     * @param checkId  the check identifier
-     * @return <code>true</code> if auto-correction is supported by the given 
-     *         check; <code>false</code> otherwise
-     */
-    boolean supportsAutoCorrection(String checkId);
-    
-    /**
-     * Indicates the default log level for the check identified by 
-     * <code>checkId</code>.
-     * The returned value may be displayed as a hint to the user.
-     * <p>
-     * The returned value may only depend on the rule configuration.
-     * That means, according to the contract of this interface,
-     * the method always has to return the same log level for a given check 
-     * identifier, as long as the configuration is not changed by an invocation 
-     * of the {@link #configure(HTMLRuleConfig) } method.
-     * </p>
-     * 
-     * @param checkId  the check identifier
-     * @return  the default log level for the given check
-     */
-    LogLevel getDefaultLogLevel(String checkId);
 
 }

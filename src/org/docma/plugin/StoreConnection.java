@@ -559,18 +559,20 @@ public interface StoreConnection
     void deleteStyle(String styleId) throws DocmaException;
     
     /**
-     * Returns the CSS of <em>all</em> styles. The result includes all   
+     * Returns the CSS of <em>all</em> saved styles. 
+     * The result includes the CSS of all styles returned by the 
+     * {@link getStyles()} method. In other words, the result includes all   
      * base-styles and all variant-styles. Each style is returned as a  
      * CSS class definition, where the style identifier is used as CSS class 
      * name.
      * 
      * @return  a string of CSS class definitions
      */
-    String getCSS() throws DocmaException;
+    String getStylesCSS() throws DocmaException;
     
     /**
-     * Returns the CSS of all styles for the given variant name. 
-     * The result includes the same styles as returned by the 
+     * Returns the CSS of all saved styles for the given variant name. 
+     * The result includes the CSS of all styles returned by the 
      * {@link getStyles(String)} method.
      * Each style is returned as a CSS class definition, 
      * where the base-identifier of each style is used as CSS class name.
@@ -578,8 +580,49 @@ public interface StoreConnection
      * @param variant  the variant of the styles to be retrieved
      * @return  a string of CSS class definitions
      */
-    String getCSS(String variant) throws DocmaException;
+    String getStylesCSS(String variant) throws DocmaException;
 
+    /**
+     * Returns the complete CSS for previewing publications. This includes
+     * styles for generated headers, table of contents and so on. 
+     * Furthermore, some preview specific styles, for example styles that 
+     * determine the visibility of index terms, may be included. 
+     * 
+     * @param conf  the output configuration
+     * @return  the complete CSS used for previewing publications
+     * @see #getCSSForEdit(OutputConfig) 
+     * @see #getCSSForExport(OutputConfig) 
+     */
+    String getCSSForPreview(OutputConfig conf) throws DocmaException;
+
+    /**
+     * Returns the complete CSS for editing content in a content editor.
+     * This may include some editing specific styles, for example styles that 
+     * determine the visibility of index terms during editing.
+     * <p>
+     * Note that the returned CSS only includes content specific but  
+     * <em>not</em> editor specific CSS. Editor specific CSS needs to be 
+     * provided by the content handler separately.
+     * </p>
+     * 
+     * @param conf  the output configuration
+     * @return  the complete CSS used for editing a content node
+     * @see #getCSSForPreview(OutputConfig) 
+     * @see #getCSSForExport(OutputConfig) 
+     */
+    String getCSSForEdit(OutputConfig conf) throws DocmaException;
+
+    /**
+     * Returns the complete CSS for publications that are exported with
+     * the given output configuration.
+     * 
+     * @param conf  the output configuration
+     * @return  the complete CSS that is exported for a publication
+     * @see #getCSSForPreview(OutputConfig) 
+     * @see #getCSSForEdit(OutputConfig) 
+     */
+    String getCSSForExport(OutputConfig conf) throws DocmaException;
+    
     //
     // ***************  Applicability methods  *****************
     //

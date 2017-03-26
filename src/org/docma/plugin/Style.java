@@ -74,4 +74,10 @@ public interface Style
     String getCSS();
     void setCSS(String styleCSS);
 
+    int countAutoFormatCalls();
+    AutoFormatCall getAutoFormatCall(int idx);
+    void addAutoFormatCall(String clsname, String args);
+    void addAutoFormatCall(int pos, String clsname, String args);
+    void removeAutoFormatCall(int pos);
+    void clearAutoFormatCalls();
 }
