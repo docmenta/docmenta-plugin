@@ -207,9 +207,10 @@ public interface HTMLRule
      * separate rule instance is created for each concurrent user action.
      * </p>
      * 
-     * @see #finishBatch()
+     * @param context  the execution context
+     * @see #finishBatch(HTMLRuleContext)
      */
-    void startBatch();
+    void startBatch(HTMLRuleContext context);
     
     /**
      * Indicates the end of applying the rule to one or more nodes.
@@ -225,9 +226,10 @@ public interface HTMLRule
      * in previous invocations of the <code>apply</code> method.
      * </p>
      * 
-     * @see #startBatch()
+     * @param context  the execution context
+     * @see #startBatch(HTMLRuleContext)
      */
-    void finishBatch();
+    void finishBatch(HTMLRuleContext context);
     
     /**
      * Applies the checks implemented by this rule to the 
@@ -239,9 +241,9 @@ public interface HTMLRule
      * be modified. 
      * 
      * @param content  the HTML content 
-     * @param context  the context information
+     * @param context  the execution context
      * @return  the modified content; <code>null</code> if the content is unmodified
-     * @see #startBatch()
+     * @see #startBatch(HTMLRuleContext)
      */
     String apply(String content, HTMLRuleContext context);
 

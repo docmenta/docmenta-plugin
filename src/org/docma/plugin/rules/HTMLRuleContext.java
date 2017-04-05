@@ -24,14 +24,23 @@ import org.docma.plugin.StoreConnection;
 public interface HTMLRuleContext 
 {
     /**
-     * Returns the identifier of the node the rule is applied to.
-     * Note that the identified node should be a 
-     * {@link org.docma.plugin.PubContent} node with MIME type 
-     * <code>"text/html"</code> or <code>"application/xhtml+xml"</code>,
-     * because rules of type <code>HTMLRule</code> are only applied to HTML  
-     * content nodes.
+     * Returns the node identifier the rule is applied to.
+     * If this context object is supplied outside of the  
+     * {@link HTMLRule#apply(String, HTMLRuleContext)} method, then 
+     * <code>null</code> is returned. For example, if this method is called on 
+     * the context object that is passed to the 
+     * {@link HTMLRule#startBatch(HTMLRuleContext)} or 
+     * {@link HTMLRule#finishBatch(HTMLRuleContext)} method, then 
+     * <code>null</code> is returned.
+     * <p>
+     * The identified node is a {@link org.docma.plugin.PubContent} node with
+     * MIME type <code>"text/html"</code> or 
+     * <code>"application/xhtml+xml"</code>, because rules of type 
+     * <code>HTMLRule</code> are only applied to HTML content nodes.
+     * </p>
      * 
-     * @return  the id of the node to which the rule is applied
+     * @return  the id of the node to which the rule is applied; 
+     *          or <code>null</code>
      */
     String getNodeId();
 
