@@ -42,8 +42,12 @@ public class ScriptInsertions
     
     public String getInsertion(WebUserSession userSess, String ext, String posId)
     {
+        if (insertions.isEmpty()) {
+            return "";
+        }
+        
         // Map feature to ScriptInsertion
-        SortedMap<String, ScriptInsertion> resultMap = new TreeMap();
+        SortedMap<String, ScriptInsertion> resultMap = null;
 
         // Iterate over all features
         for (String feature : insertions.keySet()) {
@@ -60,10 +64,19 @@ public class ScriptInsertions
             for (ScriptInsertion ins : insList) {
                 Set<String> exts = ins.getFileExtensions(userSess);
                 if (containsExt(exts, ext) || 
-                    (containsExt(exts, "*") && !resultMap.containsKey(feature))) {
+                    (containsExt(exts, "*") && 
+                     ((resultMap == null) || !resultMap.containsKey(feature)))) {
+                    if (resultMap == null) {
+                        resultMap = new TreeMap();
+                    }
                     resultMap.put(feature, ins);
                 }
             }
+        }
+
+        // No script has been inserted for the given file extension
+        if (resultMap == null) {
+            return "";
         }
         
         // Concatenate the scripts of all features
