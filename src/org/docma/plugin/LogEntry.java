@@ -20,6 +20,7 @@ package org.docma.plugin;
 public interface LogEntry 
 {
     String   getMessage();
+    String   getTitle();
     LogLevel getLevel();
     // boolean  isError();
     // boolean  isWarning();

@@ -225,16 +225,32 @@ public interface Content extends Node
     boolean hasContent(String lang_code) throws DocmaException;
 
     /**
-     * Indicates whether the node's content can be modified by the user.
+     * Indicates whether invoking one of the <code>setContent</code> methods is
+     * allowed.
      * If modifying the content is allowed, this method does nothing.
      * Otherwise an exception is thrown.
      * 
-     * @throws DocmaException  if updating the content is not allowed, for
-     *                         example, if the version is released,  
-     *                         due to wrong workflow state or missing access
-     *                         rights
+     * @throws DocmaException  if updating the content is not allowed, 
+     *                         due to missing access rights or because the
+     *                         version is already released
+     * @see #checkEditContentAllowed() 
      */
     void checkUpdateContentAllowed() throws DocmaException;
+    
+    /**
+     * Indicates whether the node's content can be modified by the user.
+     * If modifying the content is allowed, this method does nothing.
+     * Otherwise an exception is thrown.
+     * This method is the same as {@link #checkUpdateContentAllowed() }, except
+     * that this method also considers the node's workflow status.
+     * 
+     * @throws DocmaException  if updating the content is not allowed, for
+     *                         example, because the version is released, 
+     *                         due to missing access rights, or wrong workflow 
+     *                         status 
+     * @see #checkUpdateContentAllowed() 
+     */
+    void checkEditContentAllowed() throws DocmaException;
     
     //************************************************************
     //**************    Revision methods        ******************  

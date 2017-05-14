@@ -730,11 +730,11 @@ public interface Node
      * before the timeout occurs (this resets the timer for the timeout to 0).
      * </p>
      * 
-     * <p>Note: Even if a lock from another user exists, it is still possible 
-     * to update the content by calling one of the <code>setContent...</code> 
-     * methods. In other words, a lock is just a hint that the content is  
-     * currently edited, but it does <em>not</em> prevent content modifications  
-     * through API calls.</p>
+     * <p>Note: A user can update the content by calling one of the 
+     * <code>setContent...</code> methods, even if a lock from another user 
+     * exists. In other words, a lock is a hint that the content is  
+     * currently edited, but it does <em>not</em> prevent from updating the 
+     * content through API calls.</p>
      *
      * @return  <code>true</code> if lock creation succeeded;
      *          <code>false</code> if the node is already locked

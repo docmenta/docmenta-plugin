@@ -132,6 +132,24 @@ public interface HTMLRuleContext
     void logInfo(String checkId, int contentPosition, String msg, Object... args);
 
     /**
+     * Inserts a header in the log output.
+     * 
+     * @param level  the header level
+     * @param headline  the header text
+     * @param args  the replacement values for the placeholders in the header text
+     */
+    void logHeader(int level, String headline, Object... args);
+    
+    /**
+     * Logs plain text. The text can consist of a headline and 
+     * a body part. 
+     * 
+     * @param headline  the headline, or <code>null</code>
+     * @param txt  the text to be logged, or <code>null</code>
+     */
+    void logText(String headline, String txt);
+    
+    /**
      * Logs a message with the given log level. This method should only be 
      * used for messages that are <em>not</em> related to any check.
      * Messages that are related to a specific check should be logged by 
@@ -146,7 +164,7 @@ public interface HTMLRuleContext
      * 
      * @param level  the log level
      * @param msg    the message to be logged, or a message key
-     * @param args   the values to be inserted for the placeholders in the message
+     * @param args   the replacement values for the placeholders in the message
      */
     void log(LogLevel level, String msg, Object... args);
     
