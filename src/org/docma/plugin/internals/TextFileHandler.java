@@ -23,6 +23,7 @@ import org.docma.plugin.web.WebUserSession;
 public class TextFileHandler extends DefaultContentAppHandler
 {
     // Template positions where plugins are allowed to insert code
+    public static final String INSERT_HTML_META = "html_meta";
     public static final String INSERT_HTML_HEAD = "html_head";
     public static final String INSERT_BODY_START = "body_start";
     public static final String INSERT_BODY_END = "body_end";
@@ -30,10 +31,16 @@ public class TextFileHandler extends DefaultContentAppHandler
     public static final String INSERT_JS_BEFORE_SAVE = "js_before_save";
     public static final String INSERT_JS_ENTER_EDIT = "js_enter_edit";
     public static final String INSERT_JS_ENTER_VIEW = "js_enter_view";
+    public static final String INSERT_TOOLBAR = "toolbar";
     
     
     private static final ScriptInsertions insertions = new ScriptInsertions();
 
+    public static String getHTMLMeta(WebUserSession userSess, String ext)
+    {
+        return insertions.getInsertion(userSess, ext, INSERT_HTML_META);
+    }
+    
     public static String getHTMLHead(WebUserSession userSess, String ext)
     {
         return insertions.getInsertion(userSess, ext, INSERT_HTML_HEAD);
@@ -47,6 +54,11 @@ public class TextFileHandler extends DefaultContentAppHandler
     public static String getHTMLBodyEnd(WebUserSession userSess, String ext)
     {
         return insertions.getInsertion(userSess, ext, INSERT_BODY_END);
+    }
+    
+    public static String getHTMLToolbar(WebUserSession userSess, String ext)
+    {
+        return insertions.getInsertion(userSess, ext, INSERT_TOOLBAR);
     }
     
     public static String getJSOnLoad(WebUserSession userSess, String ext)

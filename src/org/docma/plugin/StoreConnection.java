@@ -1087,5 +1087,7 @@ public interface StoreConnection
     
     LogEntries prepareHTMLForSave(StringBuilder content, String nodeId, Map<Object, Object> props) throws DocmaException;
     
+    LogEntries prepareHTMLForSave(StringBuilder content, String nodeId, boolean autoCorrect, Map<Object, Object> props) throws DocmaException;
+    
     LogEntries checkHTML(StringBuilder content, String nodeId, boolean autoCorrect, Map<Object, Object> props) throws DocmaException;
 }

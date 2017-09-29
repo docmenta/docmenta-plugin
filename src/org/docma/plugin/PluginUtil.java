@@ -144,7 +144,7 @@ public class PluginUtil
             }
         }
         if ((props == null) && !languageCode.equals("en")) {
-            return getResourceString(cls, "en", name);
+            return getResourceString(cls, "en", name, args);
         }
         
         String val = (props != null) ? props.getProperty(name, "") : "";
