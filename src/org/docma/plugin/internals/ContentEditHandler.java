@@ -22,10 +22,30 @@ import org.docma.plugin.web.WebUserSession;
  */
 public class ContentEditHandler extends DefaultContentAppHandler implements EmbeddedContentEditor
 {
+    public static final String PROP_URL_IFRAME = "url_iframe";
+
 
     public String getIFrameURL(WebUserSession webSess, String nodeId) 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (props == null) {
+            return null;
+        }
+        String url = props.getProperty(PROP_URL_IFRAME, "").trim();
+        if (url.equals("")) {
+            return null;  
+        } else {
+           url = replaceURLPlaceholders(url, webSess.getSessionId(), nodeId);
+           return webSess.encodeURL(getRelativeAppURL() + url);
+        }
+    }
+
+    public String prepareContentForEdit(String content, WebUserSession webSess)
+    {
+        return content;
     }
     
+    public String prepareContentForSave(String content, WebUserSession webSess)
+    {
+        return content;
+    }
 }

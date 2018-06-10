@@ -22,6 +22,7 @@ import java.io.*;
 public interface PluginContext 
 {
     String getPluginId();
+    String getPluginVersion();
     File getPluginDirectory();
     // byte[] readPluginFile(String relative_path);
     // void   writePluginFile(String relative_path, byte[] content);
@@ -30,7 +31,7 @@ public interface PluginContext
 
     boolean isPluginLoaded();
 
-    // String getPluginProperty(String name);
+    String getPluginProperty(String propName);
     // void   setPluginProperty(String name, String value);
     // void   setPluginProperties(Properties props);
 

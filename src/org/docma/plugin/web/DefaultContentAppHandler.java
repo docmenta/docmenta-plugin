@@ -133,10 +133,13 @@ public class DefaultContentAppHandler implements ContentAppHandler, WindowSizeSt
         if (! (relativeAppURL.equals("") || relativeAppURL.endsWith("/"))) {
             relativeAppURL += "/";
         }
-        editURL = relativeAppURL + props.getProperty(PROP_URL_EDIT, "").trim();
-        viewURL = relativeAppURL + props.getProperty(PROP_URL_VIEW, "").trim();
-        String purl = props.getProperty(PROP_URL_PREVIEW, "").trim();
-        previewURL = purl.equals("") ? null : relativeAppURL + purl;
+
+        editURL = getURLFromProps(PROP_URL_EDIT);
+        viewURL = getURLFromProps(PROP_URL_VIEW);
+        previewURL = getURLFromProps(PROP_URL_PREVIEW);
+        if (previewURL.equals("")) {
+            previewURL = null;
+        }
 
         String width = props.getProperty(PROP_WIN_DEFAULT_WIDTH, "");
         try {
@@ -157,6 +160,16 @@ public class DefaultContentAppHandler implements ContentAppHandler, WindowSizeSt
         
         extensionsEdit = extensionsFromString(props.getProperty(PROP_EXTENSIONS_EDIT));
         extensionsView = extensionsFromString(props.getProperty(PROP_EXTENSIONS_VIEW));
+    }
+
+    private String getURLFromProps(String propName) 
+    {
+        String url = props.getProperty(propName, "").trim();
+        if (url.startsWith("/")) {
+            return url.substring(1);
+        } else {
+            return url.equals("") ? "" : relativeAppURL + url;
+        }
     }
 
     public String getApplicationId() 
@@ -382,15 +395,9 @@ public class DefaultContentAppHandler implements ContentAppHandler, WindowSizeSt
         return replaceJSPlaceholders(js_open_command, url, win_left, win_top, win_width, win_height);
     }
 
-    /* --------------  Private methods  ---------------------- */
+    /* --------------  Protected methods  ---------------------- */
 
-    private void openWindow(WebUserSession webSess, User sessUser, String url)
-    {
-        String js = getJSOpenWindow(webSess, url);
-        webSess.evalJavaScript(js);
-    }
-
-    private String replaceURLPlaceholders(String url, String sessId, String nodeId) 
+    protected String replaceURLPlaceholders(String url, String sessId, String nodeId) 
     {
         return url.replace("{docsess}", sessId)
                   .replace("{nodeid}", nodeId) 
@@ -399,7 +406,7 @@ public class DefaultContentAppHandler implements ContentAppHandler, WindowSizeSt
                   // .replace("{edit}", edit ? "true" : "false");
     }
     
-    private String replaceJSPlaceholders(String js, String url, String left, String top, String width, String height)
+    protected String replaceJSPlaceholders(String js, String url, String left, String top, String width, String height)
     {
         return js.replace("{url}", url)
                  .replace("{win_left}", left)
@@ -408,6 +415,15 @@ public class DefaultContentAppHandler implements ContentAppHandler, WindowSizeSt
                  .replace("{win_height}", height);
     }
     
+
+    /* --------------  Private methods  ---------------------- */
+
+    private void openWindow(WebUserSession webSess, User sessUser, String url)
+    {
+        String js = getJSOpenWindow(webSess, url);
+        webSess.evalJavaScript(js);
+    }
+
 //    private SortedSet<String> mimeTypesFromString(String line)
 //    {
 //        SortedSet<String> res = new TreeSet<String>();
